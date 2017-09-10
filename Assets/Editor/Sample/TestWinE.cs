@@ -24,6 +24,11 @@ public class TestWinE : MDIEditorWindow {
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinB");
     }
+
+    public void TestFunc()
+    {
+        Debug.Log("从SubWindow访问");
+    }
 }
 
 [SubWindowClass(typeof(TestWinE))]
@@ -71,6 +76,10 @@ class TestDrawerA : SubWindowCustomObjectDrawer
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 80, mainRect.width, 20), "关闭HelpBox"))
         {
             SetSubWindowHelpBoxType(SubWindowHelpBoxType.None);
+        }
+        if (GUI.Button(new Rect(mainRect.x, mainRect.y + 100, mainRect.width, 20), "访问容器窗体"))
+        {
+            ((TestWinE) container).TestFunc();
         }
     }
 }
