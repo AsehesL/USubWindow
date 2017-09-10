@@ -4,6 +4,8 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 
+public delegate void DrawActionUseObj(Rect rect, System.Object obj);
+
 public class EditorWindowMsgBox : EditorWindowTool
 {
     private Dictionary<int, MsgBox> m_MsgBoxs = new Dictionary<int, MsgBox>();
@@ -57,7 +59,7 @@ public class EditorWindowMsgBox : EditorWindowTool
         m_IsShowing = false;
     }
 
-    protected override void OnRegisterMethod(MethodInfo method, System.Object target, bool isStatic)
+    protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target, bool isStatic)
     {
         System.Object[] atts = method.GetCustomAttributes(typeof(MsgBoxAttribute), false);
         ParameterInfo[] parameters = method.GetParameters();
@@ -69,6 +71,10 @@ public class EditorWindowMsgBox : EditorWindowTool
                 AddMsgBox(att.id, method, target, att.x, att.y, att.width, att.height);
             }
         }
+    }
+
+    protected override void OnRegisterClass(System.Object container, Type type)
+    {
     }
 
     protected override void OnInit()

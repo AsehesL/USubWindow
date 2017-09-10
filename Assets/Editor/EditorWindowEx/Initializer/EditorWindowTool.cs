@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Reflection;
 using System.Collections;
 
@@ -7,18 +8,25 @@ public abstract class EditorWindowTool
 
     public bool IsInitialized { get; private set; }
 
-    public void RegisterMethod(MethodInfo method, System.Object target)
+    public void RegisterMethod(System.Object container, MethodInfo method, System.Object target)
     {
         if (IsInitialized)
             return;
-        OnRegisterMethod(method, target, false);
+        OnRegisterMethod(container, method, target, false);
     }
 
-    public void RegisterGlobalMethod(MethodInfo method)
+    public void RegisterGlobalMethod(System.Object container, MethodInfo method)
     {
         if (IsInitialized)
             return;
-        OnRegisterMethod(method, null, true);
+        OnRegisterMethod(container, method, null, true);
+    }
+
+    public void RegisterClass(System.Object container, Type type)
+    {
+        if (IsInitialized)
+            return;
+        OnRegisterClass(container, type);
     }
 
     public void Init()
@@ -37,7 +45,9 @@ public abstract class EditorWindowTool
         IsInitialized = false;
     }
 
-    protected abstract void OnRegisterMethod(MethodInfo method, System.Object target, bool isStatic);
+    protected abstract void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target, bool isStatic);
+
+    protected abstract void OnRegisterClass(System.Object container, Type type);
 
     protected virtual void OnInit() { }
 

@@ -11,7 +11,7 @@ using UObject = UnityEngine.Object;
 public class EditorWindowToolsInitializer
 {
 
-    public static void InitTools(Type[] types, System.Object[] targets, bool useGlobalMethod, params EditorWindowTool[] tools)
+    public static void InitTools(System.Object container, Type[] types, System.Object[] targets, params EditorWindowTool[] tools)
     {
         if (targets == null || types == null)
             return;
@@ -25,10 +25,9 @@ public class EditorWindowToolsInitializer
                 continue;
             if (targets[i] == null)
                 continue;
-            RegisterInstanceMethod(types[i], targets[i], tools);
+            RegisterInstanceMethod(container, types[i], targets[i], tools);
         }
-
-        if (useGlobalMethod)
+        
         {
             Assembly assembly = typeof (EditorWindowToolsInitializer).Assembly;
             Type[] globalTypes = assembly.GetTypes();
@@ -36,7 +35,8 @@ public class EditorWindowToolsInitializer
             {
                 if (!globalTypes[i].IsClass)
                     continue;
-                RegisterGlobalMethod(globalTypes[i], tools);
+                RegisterGlobalMethod(container, globalTypes[i], tools);
+                RegisterClass(container, globalTypes[i], tools);
             }
         }
 
@@ -47,7 +47,7 @@ public class EditorWindowToolsInitializer
         }
     }
 
-    private static void RegisterInstanceMethod(Type type, System.Object target, EditorWindowTool[] tools)
+    private static void RegisterInstanceMethod(System.Object container, Type type, System.Object target, EditorWindowTool[] tools)
     {
         MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         for (int i = 0; i < methods.Length; i++)
@@ -55,12 +55,12 @@ public class EditorWindowToolsInitializer
             for (int j = 0; j < tools.Length; j++)
             {
                 if (!tools[j].IsInitialized)
-                    tools[j].RegisterMethod(methods[i], target);
+                    tools[j].RegisterMethod(container, methods[i], target);
             }
         }
     }
 
-    private static void RegisterGlobalMethod(Type type, EditorWindowTool[] tools)
+    private static void RegisterGlobalMethod(System.Object container, Type type, EditorWindowTool[] tools)
     {
         MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
         for (int i = 0; i < methods.Length; i++)
@@ -68,8 +68,19 @@ public class EditorWindowToolsInitializer
             for (int j = 0; j < tools.Length; j++)
             {
                 if (!tools[j].IsInitialized)
-                    tools[j].RegisterGlobalMethod(methods[i]);
+                    tools[j].RegisterGlobalMethod(container, methods[i]);
             }
+        }
+    }
+
+    private static void RegisterClass(System.Object container, Type type, EditorWindowTool[] tools)
+    {
+        if (type.IsAbstract)
+            return;
+        for (int i = 0; i < tools.Length; i++)
+        {
+            if (!tools[i].IsInitialized)
+                tools[i].RegisterClass(container, type);
         }
     }
 }

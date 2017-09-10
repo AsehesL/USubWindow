@@ -88,7 +88,7 @@ public class ToolBarTree : EditorWindowTool
             m_Root.DrawToolBar();
     }
 
-    protected override void OnRegisterMethod(MethodInfo method, System.Object target, bool isStatic)
+    protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target, bool isStatic)
     {
         System.Object[] atts = method.GetCustomAttributes(typeof(ToolBarAttribute), false);
         ParameterInfo[] parameters = method.GetParameters();
@@ -100,6 +100,10 @@ public class ToolBarTree : EditorWindowTool
                 InsertItem(att.menuItem, method, target, att.priority);
             }
         }
+    }
+
+    protected override void OnRegisterClass(System.Object container, Type type)
+    {
     }
 
     protected override void OnInit()

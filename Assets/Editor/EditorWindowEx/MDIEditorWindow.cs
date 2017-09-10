@@ -35,18 +35,15 @@ public class MDIEditorWindow : EditorWindow
 
     private bool m_IsInitialized;
 
-    private bool m_UseGlobalMethod;
-
     /// <summary>
     /// 窗口创建方法
     /// </summary>
     /// <typeparam name="T">窗口类型</typeparam>
     /// <param name="handle">实现绘制的Handle对象</param>
     /// <returns></returns>
-    public static T CreateWindow<T>(bool useGlobalMethod = false, System.Object handle = null) where T : MDIEditorWindow
+    public static T CreateWindow<T>(System.Object handle = null) where T : MDIEditorWindow
     {
         T window = MDIEditorWindow.GetWindow<T>();
-        window.m_UseGlobalMethod = useGlobalMethod;
         window.handle = handle;
         window.Clear();
         window.Init();
@@ -61,12 +58,12 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="type">handle对象类型（只要可以通过构造函数创建都可以）</param>
     /// <param name="args">handle对象的构造函数参数</param>
     /// <returns></returns>
-    public static T CreateWindow<T>(System.Type type, bool useGlobalMethod, params System.Object[] args) where T : MDIEditorWindow
+    public static T CreateWindow<T>(System.Type type, params System.Object[] args) where T : MDIEditorWindow
     {
         System.Object obj = null;
         if (type != null)
             obj = System.Activator.CreateInstance(type, args);
-        return CreateWindow<T>(useGlobalMethod, obj);
+        return CreateWindow<T>(obj);
     }
 
     void OnGUI()
@@ -385,7 +382,7 @@ public class MDIEditorWindow : EditorWindow
             handleTypes = new Type[] {GetType()};
             handles = new object[] {this};
         }
-        EditorWindowToolsInitializer.InitTools(handleTypes, handles, m_UseGlobalMethod, m_WindowTree, m_ToolbarTree, m_MsgBox);
+        EditorWindowToolsInitializer.InitTools(this, handleTypes, handles, m_WindowTree, m_ToolbarTree, m_MsgBox);
     }
 
     protected virtual void OnDrawGUI()

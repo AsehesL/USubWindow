@@ -27,6 +27,25 @@ internal class SubWindowFactory
             helpbox);
     }
 
+    public static SubWindow CreateSubWindow(System.Object container, bool defaultOpen, SubWindowStyle style, System.Type customDrawerType)
+    {
+        if (customDrawerType == null)
+            return null;
+        if (subWindowClass == null)
+            GetSubWinodwStyleClasses();
+        else if (!subWindowClass.ContainsKey(style))
+            GetSubWinodwStyleClasses();
+        if (subWindowClass == null || !subWindowClass.ContainsKey(style))
+            return null;
+        System.Type type = subWindowClass[style];
+        SubWindowCustomObjectDrawer drawer =
+            (SubWindowCustomObjectDrawer) System.Activator.CreateInstance(customDrawerType);
+        if (drawer == null)
+            return null;
+        drawer.container = container;
+        return (SubWindow)System.Activator.CreateInstance(type, defaultOpen, drawer);
+    }
+
     /// <summary>
     /// 检查子窗口绘制函数的参数是否合法
     /// </summary>

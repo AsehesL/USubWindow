@@ -60,7 +60,7 @@ internal class SubWindowTree : EditorWindowTool
         this.m_Layout = new SubWindowLayout(windowName, handleName);
     }
 
-    protected override void OnRegisterMethod(MethodInfo method, System.Object target, bool isStatic)
+    protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target, bool isStatic)
     {
         if (isStatic)
             return;
@@ -75,6 +75,28 @@ internal class SubWindowTree : EditorWindowTool
             if (obj != null)
             {
                 AddWindow((SubWindow) obj, false);
+            }
+        }
+    }
+
+    protected override void OnRegisterClass(System.Object container, Type type)
+    {
+        if (container == null)
+            return;
+        if (!type.IsSubclassOf(typeof (SubWindowCustomObjectDrawer)))
+            return;
+        System.Object[] atts = type.GetCustomAttributes(typeof (SubWindowClassAttribute), false);
+        for (int i = 0; i < atts.Length; i++)
+        {
+            SubWindowClassAttribute att = (SubWindowClassAttribute) atts[i];
+            if (att == null)
+                continue;
+            if (att.targetWinType != container.GetType())
+                continue;
+            System.Object obj = SubWindowFactory.CreateSubWindow(container, att.active, att.windowStyle, att.targetWinType);
+            if (obj != null)
+            {
+                AddWindow((SubWindow)obj, false);
             }
         }
     }
