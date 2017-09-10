@@ -93,7 +93,7 @@ internal class SubWindowTree : EditorWindowTool
                 continue;
             if (att.targetWinType != container.GetType())
                 continue;
-            System.Object obj = SubWindowFactory.CreateSubWindow(container, att.active, att.windowStyle, att.targetWinType);
+            System.Object obj = SubWindowFactory.CreateSubWindow(container, att.active, att.windowStyle, type);
             if (obj != null)
             {
                 AddWindow((SubWindow)obj, false);

@@ -2,6 +2,9 @@
 using UnityEditor;
 using System.Collections;
 
+/// <summary>
+/// SubWindow基本范例
+/// </summary>
 public class TestWinA : MDIEditorWindow {
 
     [MenuItem("Test/TestWinA")]
