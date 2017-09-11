@@ -31,14 +31,3 @@ public class ToolBarAttribute : Attribute
         this.priority = priority;
     }
 }
-
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public class ToolBarHandleAttribute : Attribute
-{
-    public Type targetType;
-
-    public ToolBarHandleAttribute(Type targetType)
-    {
-        this.targetType = targetType;
-    }
-}

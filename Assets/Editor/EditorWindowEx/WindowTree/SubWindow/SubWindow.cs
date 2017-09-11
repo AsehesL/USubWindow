@@ -4,6 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using EditorWinEx;
+using EditorWinEx.Internal;
 
 /// <summary>
 /// 真正的子窗口类型-用于实际绘制

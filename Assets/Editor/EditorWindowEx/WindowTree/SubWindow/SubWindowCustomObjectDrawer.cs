@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public abstract class SubWindowCustomObjectDrawer
+public abstract class SubWindowCustomObjectDrawer : CustomObjectDrawerBase
 {
-    public System.Object container;
 
     public SubWindowHelpBox helpBox
     {
@@ -16,6 +16,14 @@ public abstract class SubWindowCustomObjectDrawer
             return;
         m_HelpBoxType = helpBoxType;
         m_HelpBox = SubWindowHelpBox.CreateHelpBox(helpBoxType);
+    }
+
+    public override void Init()
+    {
+    }
+
+    public override void Destroy()
+    {
     }
 
     public abstract GUIContent Title { get; }

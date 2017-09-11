@@ -12,16 +12,19 @@ public enum SubWindowStyle
     Grid,//网格窗口样式
 }
 
-/// <summary>
-/// 子窗口样式Attribute
-/// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public class SubWindowStyleAttribute : Attribute
+namespace EditorWinEx
 {
-    public SubWindowStyle subWindowStyle;
-
-    public SubWindowStyleAttribute(SubWindowStyle type)
+    /// <summary>
+    /// 子窗口样式Attribute
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class SubWindowStyleAttribute : Attribute
     {
-        this.subWindowStyle = type;
+        public SubWindowStyle subWindowStyle;
+
+        public SubWindowStyleAttribute(SubWindowStyle type)
+        {
+            this.subWindowStyle = type;
+        }
     }
 }

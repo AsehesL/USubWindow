@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Reflection;
+using EditorWinEx;
 
 /// <summary>
 /// Preview风格子窗体

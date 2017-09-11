@@ -4,6 +4,7 @@ using UnityEditor;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using EditorWinEx.Internal;
 
 public delegate void SubWindowAction(Rect rect);
 

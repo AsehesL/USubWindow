@@ -5,68 +5,73 @@ using System.Reflection;
 
 using UObject = UnityEngine.Object;
 
-/// <summary>
-/// 编辑器工具初始化器
-/// </summary>
-public class EditorWindowToolsInitializer
+namespace EditorWinEx.Internal
 {
-
-    public static void InitTools(System.Object container, Type[] types, System.Object[] targets, params EditorWindowTool[] tools)
+    /// <summary>
+    /// 编辑器工具初始化器
+    /// </summary>
+    internal class EditorWindowToolsInitializer
     {
-        if (targets == null || types == null)
-            return;
-        if (targets.Length == 0 || types.Length == 0)
-            return;
-        if (targets.Length != types.Length)
-            return;
-        for (int i = 0; i < types.Length; i++)
+
+        public static void InitTools(System.Object container, Type[] types, System.Object[] targets,
+            params EditorWindowTool[] tools)
         {
-            if (types[i] == null)
-                continue;
-            if (targets[i] == null)
-                continue;
-            RegisterInstanceMethod(container, types[i], targets[i], tools);
-        }
-        
-        {
-            Assembly assembly = typeof (EditorWindowToolsInitializer).Assembly;
-            Type[] globalTypes = assembly.GetTypes();
-            for (int i = 0; i < globalTypes.Length; i++)
+            if (targets == null || types == null)
+                return;
+            if (targets.Length == 0 || types.Length == 0)
+                return;
+            if (targets.Length != types.Length)
+                return;
+            for (int i = 0; i < types.Length; i++)
             {
-                if (!globalTypes[i].IsClass)
+                if (types[i] == null)
                     continue;
-                RegisterClass(container, globalTypes[i], tools);
+                if (targets[i] == null)
+                    continue;
+                RegisterInstanceMethod(container, types[i], targets[i], tools);
             }
-        }
 
-        for (int j = 0; j < tools.Length; j++)
-        {
-            if (!tools[j].IsInitialized)
-                tools[j].Init();
-        }
-    }
+            {
+                Assembly assembly = typeof (EditorWindowToolsInitializer).Assembly;
+                Type[] globalTypes = assembly.GetTypes();
+                for (int i = 0; i < globalTypes.Length; i++)
+                {
+                    if (!globalTypes[i].IsClass)
+                        continue;
+                    RegisterClass(container, globalTypes[i], tools);
+                }
+            }
 
-    private static void RegisterInstanceMethod(System.Object container, Type type, System.Object target, EditorWindowTool[] tools)
-    {
-        MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        for (int i = 0; i < methods.Length; i++)
-        {
             for (int j = 0; j < tools.Length; j++)
             {
                 if (!tools[j].IsInitialized)
-                    tools[j].RegisterMethod(container, methods[i], target);
+                    tools[j].Init();
             }
         }
-    }
 
-    private static void RegisterClass(System.Object container, Type type, EditorWindowTool[] tools)
-    {
-        if (type.IsAbstract)
-            return;
-        for (int i = 0; i < tools.Length; i++)
+        private static void RegisterInstanceMethod(System.Object container, Type type, System.Object target,
+            EditorWindowTool[] tools)
         {
-            if (!tools[i].IsInitialized)
-                tools[i].RegisterClass(container, type);
+            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            for (int i = 0; i < methods.Length; i++)
+            {
+                for (int j = 0; j < tools.Length; j++)
+                {
+                    if (!tools[j].IsInitialized)
+                        tools[j].RegisterMethod(container, methods[i], target);
+                }
+            }
+        }
+
+        private static void RegisterClass(System.Object container, Type type, EditorWindowTool[] tools)
+        {
+            if (type.IsAbstract)
+                return;
+            for (int i = 0; i < tools.Length; i++)
+            {
+                if (!tools[i].IsInitialized)
+                    tools[i].RegisterClass(container, type);
+            }
         }
     }
 }
