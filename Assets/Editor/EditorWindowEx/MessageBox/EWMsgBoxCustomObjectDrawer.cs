@@ -21,7 +21,15 @@ public abstract class EWMsgBoxCustomObjectDrawer : CustomObjectDrawerBase
             closeAction();
     }
 
-    public override void Destroy()
+    public override void OnDestroy()
+    {
+    }
+
+    public override void OnDisable()
+    {
+    }
+
+    public override void OnEnable()
     {
     }
 

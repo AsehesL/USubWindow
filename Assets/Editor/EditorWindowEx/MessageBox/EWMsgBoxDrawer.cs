@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace EditorWinEx.Internal
 {
-    internal abstract class EWMsgBoxDrawer
+    internal abstract class EWMsgBoxDrawer : CustomObjectDrawerWarpperBase
     {
 
         protected abstract float X { get; }
@@ -20,6 +20,18 @@ namespace EditorWinEx.Internal
 
             GUI.Box(main, "", GUIStyleCache.GetStyle("WindowBackground"));
             OnDrawMsgBox(main, obj);
+        }
+
+        protected override void OnDestroy()
+        {
+        }
+
+        protected override void OnEnable()
+        {
+        }
+
+        protected override void OnDisable()
+        {
         }
 
         protected abstract void OnDrawMsgBox(Rect rect, System.Object obj);
@@ -64,6 +76,11 @@ namespace EditorWinEx.Internal
             this.m_Height = height;
         }
 
+        protected override bool OnInit()
+        {
+            return true;
+        }
+
         protected override void OnDrawMsgBox(Rect rect, object obj)
         {
             if (m_DrawAction != null)
@@ -98,7 +115,30 @@ namespace EditorWinEx.Internal
         public EWMsgBoxObjectDrawer(EWMsgBoxCustomObjectDrawer drawer)
         {
             m_Drawer = drawer;
-            drawer.Init();
+        }
+
+        protected override bool OnInit()
+        {
+            m_Drawer.Init();
+            return true;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            m_Drawer.OnDestroy();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            m_Drawer.OnDisable();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            m_Drawer.OnEnable();
         }
 
         protected override void OnDrawMsgBox(Rect rect, object obj)

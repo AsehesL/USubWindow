@@ -79,7 +79,7 @@ namespace EditorWinEx.Internal
 
                 if (obj != null)
                 {
-                    AddWindow((SubWindow) obj, false);
+                    m_SubWindowList.Add((SubWindow)obj);
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace EditorWinEx.Internal
                 System.Object obj = SubWindowFactory.CreateSubWindow(container, att.active, att.windowStyle, type);
                 if (obj != null)
                 {
-                    AddWindow((SubWindow) obj, false);
+                    m_SubWindowList.Add((SubWindow)obj);
                 }
             }
         }
@@ -118,24 +118,20 @@ namespace EditorWinEx.Internal
             base.OnDestroy();
             RemoveAllDynamicWindow();
             SaveCurrentLayout();
+            DestroyAllWindow();
         }
 
         /// <summary>
         /// 添加子窗口
         /// </summary>
         /// <param name="window">子窗口</param>
-        /// <param name="active">是否处于激活状态</param>
-        public void AddWindow(SubWindow window, bool active)
+        public void AddWindow(SubWindow window)
         {
             m_SubWindowList.Add(window);
-            if (active)
+            //if (active)
             {
-                window.isOpen = true;
+                window.Open();
                 this.InsertWindow(window);
-            }
-            else
-            {
-                window.isOpen = false;
             }
         }
 
@@ -161,12 +157,12 @@ namespace EditorWinEx.Internal
             var sw = m_SubWindowList.Find(x => x.GetIndentifier() == windowId);
             if (sw != null)
             {
-                if (active && !sw.isOpen)
+                if (active && !sw.IsOpen)
                 {
                     this.InsertWindow(sw);
                     return;
                 }
-                if (!active && sw.isOpen)
+                if (!active && sw.IsOpen)
                 {
                     sw.Close();
                     return;
@@ -187,7 +183,7 @@ namespace EditorWinEx.Internal
                     if (this.m_SubWindowList[i].GetIndentifier() == windowId)
                     {
                         var win = this.m_SubWindowList[i];
-                        if (win.isOpen)
+                        if (win.IsOpen)
                         {
                             if (this.m_Root != null)
                             {
@@ -207,24 +203,47 @@ namespace EditorWinEx.Internal
         {
             if (this.m_SubWindowList != null)
             {
+                bool hasRemoved = false;
                 for (int i = 0; i < m_SubWindowList.Count; i++)
                 {
                     if (this.m_SubWindowList[i].isDynamic)
                     {
                         var win = this.m_SubWindowList[i];
-                        if (win.isOpen)
+                        if (win.IsOpen)
                         {
                             if (this.m_Root != null)
                             {
                                 this.m_Root.RemoveWindow(win);
-                                this.m_Root.ClearEmptyNode();
-                                this.m_Root.Recalculate(0, true);
+                                hasRemoved = true;
                             }
                         }
+                        win.Destroy();
                         this.m_SubWindowList.RemoveAt(i);
-                        return;
                     }
                 }
+                if (hasRemoved)
+                {
+                    if (this.m_Root != null)
+                    {
+                        this.m_Root.ClearEmptyNode();
+                        this.m_Root.Recalculate(0, true);
+                    }
+                }
+            }
+        }
+
+        private void DestroyAllWindow()
+        {
+            if (this.m_SubWindowList != null)
+            {
+                for (int i = 0; i < m_SubWindowList.Count; i++)
+                {
+                    if (m_SubWindowList[i] != null)
+                    {
+                        m_SubWindowList[i].Destroy();
+                    }
+                }
+                m_SubWindowList.Clear();
             }
         }
 
@@ -269,7 +288,7 @@ namespace EditorWinEx.Internal
                     GenericMenu menu = new GenericMenu();
                     for (int i = 0; i < m_SubWindowList.Count; i++)
                     {
-                        menu.AddItem(new GUIContent(m_SubWindowList[i].Title), m_SubWindowList[i].isOpen,
+                        menu.AddItem(new GUIContent(m_SubWindowList[i].Title), m_SubWindowList[i].IsOpen,
                             OnSetSubWindowActive, m_SubWindowList[i]);
                     }
                     menu.DropDown(rect);
@@ -407,7 +426,7 @@ namespace EditorWinEx.Internal
             if (subwindow == null)
                 return;
             SubWindow window = (SubWindow) subwindow;
-            if (window.isOpen)
+            if (window.IsOpen)
             {
                 window.Close();
             }
@@ -433,7 +452,7 @@ namespace EditorWinEx.Internal
                 return false;
             for (int i = 0; i < m_SubWindowList.Count; i++)
             {
-                if (m_SubWindowList[i].isOpen)
+                if (m_SubWindowList[i].IsOpen)
                 {
                     m_SubWindowList[i].Close();
                 }

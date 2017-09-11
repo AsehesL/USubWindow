@@ -60,4 +60,28 @@ class TestMsgDrawer : EWMsgBoxCustomObjectDrawer
         }
         GUI.Label(new Rect(rect.x, rect.y + 30, rect.width, 20), "XXXXXXXXXXXXXX");
     }
+
+    public override void Init()
+    {
+        base.Init();
+        Debug.Log("Init");
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        Debug.Log("Enable");
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        Debug.Log("Disbale");
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Debug.Log("Destroy");
+    }
 }

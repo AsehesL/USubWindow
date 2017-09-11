@@ -22,7 +22,15 @@ public abstract class SubWindowCustomObjectDrawer : CustomObjectDrawerBase
     {
     }
 
-    public override void Destroy()
+    public override void OnEnable()
+    {
+    }
+
+    public override void OnDisable()
+    {
+    }
+
+    public override void OnDestroy()
     {
     }
 

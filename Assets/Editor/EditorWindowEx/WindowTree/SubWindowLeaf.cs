@@ -41,7 +41,7 @@ namespace EditorWinEx.Internal
         {
             if (window != null)
             {
-                window.isOpen = true;
+                window.Open();
                 m_SubWindows.Add(window);
             }
             m_TweenParam = new GUITweenParam(true);
@@ -195,7 +195,7 @@ namespace EditorWinEx.Internal
                 var window = windowList.Find(w => w.GetIndentifier() == id);
                 if (window == null)
                     continue;
-                window.isOpen = true;
+                window.Open();
                 window.AddCloseEventListener(onWindowClose);
                 m_SubWindows.Add(window);
             }

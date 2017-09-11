@@ -10,7 +10,7 @@ public delegate void DrawActionUseObj(Rect rect, System.Object obj);
 
 public class EditorWindowMsgBox : EditorWindowTool
 {
-    private Dictionary<int, EWMsgBox> m_MsgBoxs = new Dictionary<int, EWMsgBox>();
+    private Dictionary<int, EWMsgBoxDrawer> m_MsgBoxs = new Dictionary<int, EWMsgBoxDrawer>();
 
     public bool IsShowing
     {
@@ -31,7 +31,8 @@ public class EditorWindowMsgBox : EditorWindowTool
             Debug.LogError("错误,已经包含该ID的MsgBox方法:" + id);
             return;
         }
-        EWMsgBox msgbox = new EWMsgBox(method, target, x, y, width, height);
+        EWMsgBoxMethodDrawer msgbox = new EWMsgBoxMethodDrawer(method, target, x, y, width, height);
+        msgbox.Init();
         m_MsgBoxs.Add(id, msgbox);
     }
 
@@ -42,7 +43,8 @@ public class EditorWindowMsgBox : EditorWindowTool
             Debug.LogError("错误,已经包含该ID的MsgBox方法:" + id);
             return;
         }
-        EWMsgBox msgbox = new EWMsgBox(drawer);
+        EWMsgBoxObjectDrawer msgbox = new EWMsgBoxObjectDrawer(drawer);
+        msgbox.Init();
         m_MsgBoxs.Add(id, msgbox);
     }
 
@@ -64,12 +66,17 @@ public class EditorWindowMsgBox : EditorWindowTool
             m_Obj = obj;
             m_CurrentShowId = id;
             m_IsShowing = true;
+            m_MsgBoxs[id].Enable();
         }
     }
 
     public void HideMsgBox()
     {
         m_IsShowing = false;
+        if (m_MsgBoxs.ContainsKey(m_CurrentShowId))
+        {
+            m_MsgBoxs[m_CurrentShowId].Disable();
+        }
     }
 
     protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
@@ -115,5 +122,12 @@ public class EditorWindowMsgBox : EditorWindowTool
 
     protected override void OnDestroy()
     {
+        foreach(var kvp in m_MsgBoxs)
+        {
+            if (kvp.Value != null)
+            {
+                kvp.Value.Destroy();
+            }
+        }
     }
 }

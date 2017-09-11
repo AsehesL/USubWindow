@@ -8,5 +8,9 @@ public abstract class CustomObjectDrawerBase
 
     public abstract void Init();
 
-    public abstract void Destroy();
+    public abstract void OnEnable();
+
+    public abstract void OnDisable();
+
+    public abstract void OnDestroy();
 }

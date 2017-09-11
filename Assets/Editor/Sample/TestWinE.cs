@@ -82,4 +82,29 @@ class TestDrawerA : SubWindowCustomObjectDrawer
             ((TestWinE) container).TestFunc();
         }
     }
+
+    public override void Init()
+    {
+        base.Init();
+        Debug.Log("Init");
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Debug.Log("Destroy");
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        Debug.Log("Disbale");
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        Debug.Log("Enalbe");
+    }
+   
 }

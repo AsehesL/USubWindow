@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace EditorWinEx.Internal
 {
-    internal abstract class SubWindowDrawerBase
+    internal abstract class SubWindowDrawerBase : CustomObjectDrawerWarpperBase
     {
         /// <summary>
         /// 标题
@@ -49,6 +49,18 @@ namespace EditorWinEx.Internal
                 return h;
             }
             return new Rect(rect.x, rect.y, 0, 0);
+        }
+
+        protected override void OnDestroy()
+        {
+        }
+
+        protected override void OnEnable()
+        {
+        }
+
+        protected override void OnDisable()
+        {
         }
 
         public abstract void DrawWindow(Rect mainRect, Rect toolbarRect, Rect helpboxRect);
@@ -127,6 +139,11 @@ namespace EditorWinEx.Internal
             }
         }
 
+        protected override bool OnInit()
+        {
+            return true;
+        }
+
         public override void DrawWindow(Rect mainRect, Rect toolbarRect, Rect helpboxRect)
         {
             if (m_Method != null)
@@ -185,7 +202,6 @@ namespace EditorWinEx.Internal
         {
             this.m_ObjDrawer = drawer;
             this.m_Id = drawer.GetType().FullName;
-            drawer.Init();
         }
 
         public override void DrawWindow(Rect mainRect, Rect toolbarRect, Rect helpboxRect)
@@ -195,6 +211,30 @@ namespace EditorWinEx.Internal
                 this.m_ObjDrawer.DrawToolBar(toolbarRect);
             if (helpboxRect.width > 0 && helpboxRect.height > 0)
                 this.m_ObjDrawer.DrawHelpBox(helpboxRect);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            m_ObjDrawer.OnDisable();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            m_ObjDrawer.OnDestroy();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            m_ObjDrawer.OnEnable();
+        }
+
+        protected override bool OnInit()
+        {
+            m_ObjDrawer.Init();
+            return true;
         }
     }
 }

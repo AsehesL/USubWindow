@@ -26,7 +26,7 @@ public class SubWindow
     /// </summary>
     public bool DefaultOpen { get; private set; }
 
-    public bool isOpen;
+    public bool IsOpen { get; private set; }
 
     public bool isDynamic;
 
@@ -42,12 +42,14 @@ public class SubWindow
     {
         this.DefaultOpen = defaultOpen;
         this.m_Drawer = new SubWindowMethodDrawer(title, icon, method, target, toolbar, helpbox);
+        this.m_Drawer.Init();
     }
 
     public SubWindow(bool defaultOpen, SubWindowCustomObjectDrawer drawer)
     {
         this.DefaultOpen = defaultOpen;
         this.m_Drawer = new SubWindowObjectDrawer(drawer);
+        this.m_Drawer.Init();
     }
 
     /// <summary>
@@ -87,13 +89,28 @@ public class SubWindow
     /// </summary>
     public void Close()
     {
-        if (!isOpen)
+        if (!IsOpen)
             return;
-        isOpen = false;
+        IsOpen = false;
         if (m_OnClose != null)
         {
             m_OnClose(this);
         }
+        m_Drawer.Disable();
+    }
+
+    public void Open()
+    {
+        if (IsOpen)
+            return;
+        IsOpen = true;
+        m_Drawer.Enable();
+    }
+
+    public void Destroy()
+    {
+        IsOpen = false;
+        m_Drawer.Destroy();
     }
 
     protected virtual Rect DrawMainArea(Rect rect)

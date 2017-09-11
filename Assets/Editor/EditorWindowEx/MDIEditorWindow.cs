@@ -478,7 +478,7 @@ public class MDIEditorWindow : EditorWindow
                 return;
             SubWindow window = new SubWindow(title, icon, true, action.Method, action.Target, toolbar, helpbox);
             window.isDynamic = true;
-            this.m_WindowTree.AddWindow(window, true);
+            this.m_WindowTree.AddWindow(window);
         }
     }
 
