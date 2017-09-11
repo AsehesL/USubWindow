@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 
 /// <summary>
-/// SubWindow基本范例
+/// SubWindow工具栏和帮助栏范例
 /// </summary>
 public class TestWinC : MDIEditorWindow {
 

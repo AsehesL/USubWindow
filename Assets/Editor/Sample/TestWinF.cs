@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// SubWindow基本范例
+/// SubWindow自定义消息弹框范例
 /// </summary>
 public class TestWinF : MDIEditorWindow {
 

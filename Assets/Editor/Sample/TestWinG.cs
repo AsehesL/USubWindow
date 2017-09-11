@@ -4,7 +4,7 @@ using System.Collections;
 using EditorWinEx.Internal;
 
 /// <summary>
-/// SubWindow基本范例
+/// SubWindow自定义窗体、主窗体间的消息通信范例
 /// </summary>
 public class TestWinG : MDIEditorWindow {
 

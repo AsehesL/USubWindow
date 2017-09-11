@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 
 /// <summary>
-/// SubWindow基本范例
+/// SubWindow主工具栏扩展和自定义消息弹框范例
 /// </summary>
 public class TestWinD : MDIEditorWindow {
 
