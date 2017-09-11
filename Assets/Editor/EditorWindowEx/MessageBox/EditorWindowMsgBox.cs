@@ -59,7 +59,7 @@ public class EditorWindowMsgBox : EditorWindowTool
         m_IsShowing = false;
     }
 
-    protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target, bool isStatic)
+    protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
     {
         System.Object[] atts = method.GetCustomAttributes(typeof(MsgBoxAttribute), false);
         ParameterInfo[] parameters = method.GetParameters();

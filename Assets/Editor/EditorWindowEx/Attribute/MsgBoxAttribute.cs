@@ -28,3 +28,19 @@ public class MsgBoxAttribute : Attribute
         this.height = height;
     }
 }
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+public class MsgBoxHandleAttribute : Attribute
+{
+    public Type targetType;
+    /// <summary>
+    /// 消息框ID
+    /// </summary>
+    public int id;
+
+    public MsgBoxHandleAttribute(Type targetType, int id)
+    {
+        this.id = id;
+        this.targetType = targetType;
+    }
+}

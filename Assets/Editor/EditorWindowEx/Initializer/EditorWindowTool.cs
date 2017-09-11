@@ -12,14 +12,7 @@ public abstract class EditorWindowTool
     {
         if (IsInitialized)
             return;
-        OnRegisterMethod(container, method, target, false);
-    }
-
-    public void RegisterGlobalMethod(System.Object container, MethodInfo method)
-    {
-        if (IsInitialized)
-            return;
-        OnRegisterMethod(container, method, null, true);
+        OnRegisterMethod(container, method, target);
     }
 
     public void RegisterClass(System.Object container, Type type)
@@ -45,7 +38,7 @@ public abstract class EditorWindowTool
         IsInitialized = false;
     }
 
-    protected abstract void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target, bool isStatic);
+    protected abstract void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target);
 
     protected abstract void OnRegisterClass(System.Object container, Type type);
 

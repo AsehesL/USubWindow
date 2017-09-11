@@ -35,7 +35,6 @@ public class EditorWindowToolsInitializer
             {
                 if (!globalTypes[i].IsClass)
                     continue;
-                RegisterGlobalMethod(container, globalTypes[i], tools);
                 RegisterClass(container, globalTypes[i], tools);
             }
         }
@@ -56,19 +55,6 @@ public class EditorWindowToolsInitializer
             {
                 if (!tools[j].IsInitialized)
                     tools[j].RegisterMethod(container, methods[i], target);
-            }
-        }
-    }
-
-    private static void RegisterGlobalMethod(System.Object container, Type type, EditorWindowTool[] tools)
-    {
-        MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-        for (int i = 0; i < methods.Length; i++)
-        {
-            for (int j = 0; j < tools.Length; j++)
-            {
-                if (!tools[j].IsInitialized)
-                    tools[j].RegisterGlobalMethod(container, methods[i]);
             }
         }
     }

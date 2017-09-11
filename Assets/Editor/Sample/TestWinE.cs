@@ -31,7 +31,7 @@ public class TestWinE : MDIEditorWindow {
     }
 }
 
-[SubWindowClass(typeof(TestWinE))]
+[SubWindowHandle(typeof(TestWinE))]
 class TestDrawerA : SubWindowCustomObjectDrawer
 {
 

@@ -137,3 +137,29 @@ public class SubWindowAttribute : Attribute
     }
 
 }
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+public class SubWindowHandleAttribute : Attribute
+{
+    /// <summary>
+    /// 目标窗口类型
+    /// </summary>
+    public Type targetWinType;
+
+    /// <summary>
+    /// 是否激活
+    /// </summary>
+    public bool active;
+
+    /// <summary>
+    /// 窗口样式类型
+    /// </summary>
+    public SubWindowStyle windowStyle;
+
+    public SubWindowHandleAttribute(Type targetWinType, SubWindowStyle windowStyle = SubWindowStyle.Default, bool active = true)
+    {
+        this.targetWinType = targetWinType;
+        this.active = active;
+        this.windowStyle = windowStyle;
+    }
+}
