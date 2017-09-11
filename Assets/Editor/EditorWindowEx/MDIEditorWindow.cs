@@ -4,6 +4,7 @@ using UnityEditor;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using EditorWinEx;
 using EditorWinEx.Internal;
 
 public delegate void SubWindowAction(Rect rect);
@@ -15,7 +16,7 @@ public delegate void SubWindowActionFull(Rect rect, Rect toolBar, Rect helpBox);
 /// <summary>
 /// MDIEditorWindow-可单独传入Handle打开，也可扩展该类
 /// </summary>
-public class MDIEditorWindow : EditorWindow
+public class MDIEditorWindow : EditorWindow, IMessageDispatcher
 {
     /// <summary>
     /// 进行绘制的handle对象（可以是任何能通过构造函数构造的类型）
@@ -491,4 +492,8 @@ public class MDIEditorWindow : EditorWindow
         }
     }
 
+    public Type GetDispatcherType()
+    {
+        return GetType();
+    }
 }
