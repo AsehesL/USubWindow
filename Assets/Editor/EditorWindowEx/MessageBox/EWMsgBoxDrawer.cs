@@ -5,7 +5,10 @@ using System.Reflection;
 
 namespace EditorWinEx.Internal
 {
-    internal abstract class EWMsgBoxDrawer : CustomObjectDrawerWarpperBase
+    /// <summary>
+    /// MsgBox组件绘制器
+    /// </summary>
+    internal abstract class EWMsgBoxDrawer : EWComponentDrawerBase
     {
 
         protected abstract float X { get; }
@@ -110,9 +113,9 @@ namespace EditorWinEx.Internal
             get { return m_Drawer.Height; }
         }
 
-        private EWMsgBoxCustomObjectDrawer m_Drawer;
+        private EWMsgBoxCustomDrawer m_Drawer;
 
-        public EWMsgBoxObjectDrawer(EWMsgBoxCustomObjectDrawer drawer)
+        public EWMsgBoxObjectDrawer(EWMsgBoxCustomDrawer drawer)
         {
             m_Drawer = drawer;
         }

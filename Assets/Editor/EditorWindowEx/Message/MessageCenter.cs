@@ -15,14 +15,20 @@ namespace EditorWinEx.Internal
 
     public delegate void MessageHandle<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3);
 
+    /// <summary>
+    /// 消息中心
+    /// 消息中心扩展消息派遣器的方法，实现消息监听、移除、广播
+    /// </summary>
     internal static class MessageCenter
     {
-
+        /// <summary>
+        /// 根据容器类型分组消息，只有同一个容器中的不同组件之间可以监听、广播消息
+        /// </summary>
         private static Dictionary<string, Dictionary<int, Delegate>> m_Messages;
 
         public static void AddListener(this IMessageDispatcher dispatcher, int messageId, MessageHandle handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType);
@@ -36,7 +42,7 @@ namespace EditorWinEx.Internal
 
         public static void AddListener<T>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType);
@@ -50,7 +56,7 @@ namespace EditorWinEx.Internal
 
         public static void AddListener<T0, T1>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T0, T1> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType);
@@ -64,7 +70,7 @@ namespace EditorWinEx.Internal
 
         public static void AddListener<T0, T1, T2>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T0, T1, T2> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType);
@@ -78,7 +84,7 @@ namespace EditorWinEx.Internal
 
         public static void AddListener<T0, T1, T2, T3>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T0, T1, T2, T3> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType);
@@ -92,7 +98,7 @@ namespace EditorWinEx.Internal
 
         public static void RemoveListener(this IMessageDispatcher dispatcher, int messageId, MessageHandle handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType, false);
@@ -108,7 +114,7 @@ namespace EditorWinEx.Internal
 
         public static void RemoveListener<T>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType, false);
@@ -124,7 +130,7 @@ namespace EditorWinEx.Internal
 
         public static void RemoveListener<T0, T1>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T0, T1> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType, false);
@@ -140,7 +146,7 @@ namespace EditorWinEx.Internal
 
         public static void RemoveListener<T0, T1, T2>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T0, T1, T2> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType, false);
@@ -156,7 +162,7 @@ namespace EditorWinEx.Internal
 
         public static void RemoveListener<T0, T1, T2, T3>(this IMessageDispatcher dispatcher, int messageId, MessageHandle<T0, T1, T2, T3> handle)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             if (handle == null)
                 return;
             var messages = GetMessagesOfType(containterType, false);
@@ -172,7 +178,7 @@ namespace EditorWinEx.Internal
 
         public static void Broadcast(this IMessageDispatcher dispatcher, int messageId)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             var method = GetMethod(containterType, messageId);
             if (method != null)
             {
@@ -184,7 +190,7 @@ namespace EditorWinEx.Internal
 
         public static void Broadcast<T>(this IMessageDispatcher dispatcher, int messageId, T arg)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             var method = GetMethod(containterType, messageId);
             if (method != null)
             {
@@ -196,7 +202,7 @@ namespace EditorWinEx.Internal
 
         public static void Broadcast<T0, T1>(this IMessageDispatcher dispatcher, int messageId, T0 arg0, T1 arg1)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             var method = GetMethod(containterType, messageId);
             if (method != null)
             {
@@ -208,7 +214,7 @@ namespace EditorWinEx.Internal
 
         public static void Broadcast<T0, T1, T2>(this IMessageDispatcher dispatcher, int messageId, T0 arg0, T1 arg1, T2 arg2)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             var method = GetMethod(containterType, messageId);
             if (method != null)
             {
@@ -220,7 +226,7 @@ namespace EditorWinEx.Internal
 
         public static void Broadcast<T0, T1, T2, T3>(this IMessageDispatcher dispatcher, int messageId, T0 arg0, T1 arg1, T2 arg2, T3 arg3)
         {
-            Type containterType = dispatcher.GetDispatcherType();
+            Type containterType = dispatcher.GetContainerType();
             var method = GetMethod(containterType, messageId);
             if (method != null)
             {

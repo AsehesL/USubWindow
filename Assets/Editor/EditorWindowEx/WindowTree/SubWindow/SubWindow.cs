@@ -38,14 +38,14 @@ public class SubWindow
     private SubWindowDrawerBase m_Drawer;
 
     public SubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target,
-        SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
+        EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
     {
         this.DefaultOpen = defaultOpen;
         this.m_Drawer = new SubWindowMethodDrawer(title, icon, method, target, toolbar, helpbox);
         this.m_Drawer.Init();
     }
 
-    public SubWindow(bool defaultOpen, SubWindowCustomObjectDrawer drawer)
+    public SubWindow(bool defaultOpen, SubWindowCustomDrawer drawer)
     {
         this.DefaultOpen = defaultOpen;
         this.m_Drawer = new SubWindowObjectDrawer(drawer);

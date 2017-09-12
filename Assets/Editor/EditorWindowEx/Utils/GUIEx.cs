@@ -83,93 +83,93 @@ public class GUIEx
         return param;
     }
 
-    public static string GetIconPath(SubWindowIcon icon)
+    public static string GetIconPath(EWSubWindowIcon icon)
     {
         switch (icon)
         {
-            case SubWindowIcon.None:
+            case EWSubWindowIcon.None:
                 return null;
-            case SubWindowIcon.Animation:
+            case EWSubWindowIcon.Animation:
                 return "d_UnityEditor.AnimationWindow";
-            case SubWindowIcon.Animator:
+            case EWSubWindowIcon.Animator:
                 return "UnityEditor.Graphs.AnimatorControllerTool";
-            case SubWindowIcon.AssetStore:
+            case EWSubWindowIcon.AssetStore:
                 return "Asset Store";
-            case SubWindowIcon.AudioMixer:
+            case EWSubWindowIcon.AudioMixer:
                 return "Audio Mixer";
-            case SubWindowIcon.Web:
+            case EWSubWindowIcon.Web:
                 return "BuildSettings.Web.Small";
-            case SubWindowIcon.Console:
+            case EWSubWindowIcon.Console:
                 return "d_UnityEditor.ConsoleWindow";
-            case SubWindowIcon.Game:
+            case EWSubWindowIcon.Game:
                 return "d_UnityEditor.GameView";
-            case SubWindowIcon.Hierarchy:
+            case EWSubWindowIcon.Hierarchy:
                 return "UnityEditor.HierarchyWindow";
-            case SubWindowIcon.Inspector:
+            case EWSubWindowIcon.Inspector:
                 return "d_UnityEditor.InspectorWindow";
-            case SubWindowIcon.Lighting:
+            case EWSubWindowIcon.Lighting:
                 return "Lighting";
-            case SubWindowIcon.Navigation:
+            case EWSubWindowIcon.Navigation:
                 return "Navigation";
-            case SubWindowIcon.Occlusion:
+            case EWSubWindowIcon.Occlusion:
                 return "Occlusion";
-            case SubWindowIcon.Profiler:
+            case EWSubWindowIcon.Profiler:
                 return "d_UnityEditor.ProfilerWindow";
-            case SubWindowIcon.Project:
+            case EWSubWindowIcon.Project:
                 return "Project";
-            case SubWindowIcon.Scene:
+            case EWSubWindowIcon.Scene:
                 return "d_UnityEditor.SceneView";
-            case SubWindowIcon.BuildSetting:
+            case EWSubWindowIcon.BuildSetting:
                 return "BuildSettings.SelectedIcon";
-            case SubWindowIcon.Shader:
+            case EWSubWindowIcon.Shader:
                 return "Shader Icon";
-            case SubWindowIcon.Avator:
+            case EWSubWindowIcon.Avator:
                 return "Avatar Icon";
-            case SubWindowIcon.GameObject:
+            case EWSubWindowIcon.GameObject:
                 return "GameObject Icon";
-            case SubWindowIcon.Camera:
+            case EWSubWindowIcon.Camera:
                 return "Camera Icon";
-            case SubWindowIcon.JavaScript:
+            case EWSubWindowIcon.JavaScript:
                 return "js Script Icon";
-            case SubWindowIcon.CSharp:
+            case EWSubWindowIcon.CSharp:
                 return "cs Script Icon";
-            case SubWindowIcon.Sprite:
+            case EWSubWindowIcon.Sprite:
                 return "Sprite Icon";
-            case SubWindowIcon.Text:
+            case EWSubWindowIcon.Text:
                 return "AnimatorController Icon";
-            case SubWindowIcon.AnimatorController:
+            case EWSubWindowIcon.AnimatorController:
                 return "cs Script Icon";
-            case SubWindowIcon.MeshRenderer:
+            case EWSubWindowIcon.MeshRenderer:
                 return "MeshRenderer Icon";
-            case SubWindowIcon.Terrain:
+            case EWSubWindowIcon.Terrain:
                 return "Terrain Icon";
-            case SubWindowIcon.Audio:
+            case EWSubWindowIcon.Audio:
                 return "SceneviewAudio";
-            case SubWindowIcon.IPhone:
+            case EWSubWindowIcon.IPhone:
                 return "BuildSettings.iPhone.small";
-            case SubWindowIcon.Font:
+            case EWSubWindowIcon.Font:
                 return "Font Icon";
-            case SubWindowIcon.Material:
+            case EWSubWindowIcon.Material:
                 return "Material Icon";
-            case SubWindowIcon.GameManager:
+            case EWSubWindowIcon.GameManager:
                 return "GameManager Icon";
-            case SubWindowIcon.Player:
+            case EWSubWindowIcon.Player:
                 return "Animation Icon";
-            case SubWindowIcon.Texture:
+            case EWSubWindowIcon.Texture:
                 return "Texture Icon";
-            case SubWindowIcon.Scriptable:
+            case EWSubWindowIcon.Scriptable:
                 return "ScriptableObject Icon";
-            case SubWindowIcon.Movie:
+            case EWSubWindowIcon.Movie:
                 return "MovieTexture Icon";
-            case SubWindowIcon.CGProgram:
+            case EWSubWindowIcon.CGProgram:
                 return "CGProgram Icon";
-            case SubWindowIcon.Search:
+            case EWSubWindowIcon.Search:
                 return "Search Icon";
-            case SubWindowIcon.Favorite:
+            case EWSubWindowIcon.Favorite:
                 return "Favorite Icon";
-            case SubWindowIcon.Android:
+            case EWSubWindowIcon.Android:
                 return "BuildSettings.Android.small";
-            case SubWindowIcon.Setting:
+            case EWSubWindowIcon.Setting:
                 return "SettingsIcon";
             default:
                 return null;

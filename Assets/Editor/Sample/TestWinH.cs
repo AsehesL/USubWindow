@@ -25,26 +25,26 @@ public class TestWinH : MDIEditorWindow {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "这是动态窗口B");
     }
 
-    [ToolBar("工具/创建动态窗口A")]
+    [EWToolBar("工具/创建动态窗口A")]
     private void Test1()
     {
-        AddDynamicSubWindow("动态窗口A", SubWindowIcon.Navigation, SubWinA);
+        AddDynamicSubWindow("动态窗口A", EWSubWindowIcon.Navigation, SubWinA);
     }
 
-    [ToolBar("工具/移除动态窗口A")]
+    [EWToolBar("工具/移除动态窗口A")]
     private void Test2()
     {
         RemoveDynamicSubWindow(SubWinA);
     }
 
-    [ToolBar("工具/创建动态窗口B")]
+    [EWToolBar("工具/创建动态窗口B")]
     private void Test3()
     {
-        AddDynamicSubWindowWithToolBar("动态窗口B", SubWindowIcon.Movie, SubWindowToolbarType.Mini, SubWinB);
+        AddDynamicSubWindowWithToolBar("动态窗口B", EWSubWindowIcon.Movie, EWSubWindowToolbarType.Mini, SubWinB);
     }
 
 
-    [ToolBar("工具/移除动态窗口B")]
+    [EWToolBar("工具/移除动态窗口B")]
     private void Test4()
     {
         RemoveDynamicSubWindow(SubWinB);

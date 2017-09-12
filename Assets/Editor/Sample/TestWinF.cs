@@ -14,7 +14,7 @@ public class TestWinF : MDIEditorWindow {
         TestWinF win = TestWinA.CreateWindow<TestWinF>();
     }
 
-    [SubWindow("SunWinA", SubWindowIcon.Game)]
+    [EWSubWindow("SunWinA", EWSubWindowIcon.Game)]
     private void SubWinA(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinA");
@@ -27,8 +27,8 @@ public class TestWinF : MDIEditorWindow {
     
 }
 
-[MsgBoxHandle(typeof(TestWinF), 2)]
-class TestMsgDrawer : EWMsgBoxCustomObjectDrawer
+[EWMsgBoxHandle(typeof(TestWinF), 2)]
+class TestMsgDrawer : EWMsgBoxCustomDrawer
 {
     public override float Height
     {

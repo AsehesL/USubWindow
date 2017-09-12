@@ -5,7 +5,7 @@ using System.Collections;
 /// <summary>
 /// 子窗口图标
 /// </summary>
-public enum SubWindowIcon
+public enum EWSubWindowIcon
 {
     None,
     BuildSetting,
@@ -52,9 +52,9 @@ public enum SubWindowIcon
 }
 
 /// <summary>
-/// 工具栏类型
+/// 子窗口工具栏类型
 /// </summary>
-public enum SubWindowToolbarType
+public enum EWSubWindowToolbarType
 {
     None,
     Normal,
@@ -66,7 +66,7 @@ public enum SubWindowToolbarType
 /// 支持1~3个Rect类型参数，分别表示实际绘制区域、工具栏区域、helpbox区域
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-public class SubWindowAttribute : Attribute
+public class EWSubWindowAttribute : Attribute
 {
     /// <summary>
     /// 标题
@@ -91,7 +91,7 @@ public class SubWindowAttribute : Attribute
     /// <summary>
     /// 是否显示工具栏
     /// </summary>
-    public SubWindowToolbarType toolbar;
+    public EWSubWindowToolbarType toolbar;
 
     /// <summary>
     /// 帮助栏样式
@@ -107,7 +107,7 @@ public class SubWindowAttribute : Attribute
     /// <param name="windowStyle">窗口样式</param>
     /// <param name="toolbar">是否显示工具栏</param>
     /// <param name="helpBox">帮助栏样式</param>
-    public SubWindowAttribute(string title, SubWindowIcon icon = SubWindowIcon.None, bool active = true, SubWindowStyle windowStyle = SubWindowStyle.Default, SubWindowToolbarType toolbar = SubWindowToolbarType.None, SubWindowHelpBoxType helpBox = SubWindowHelpBoxType.None)
+    public EWSubWindowAttribute(string title, EWSubWindowIcon icon = EWSubWindowIcon.None, bool active = true, SubWindowStyle windowStyle = SubWindowStyle.Default, EWSubWindowToolbarType toolbar = EWSubWindowToolbarType.None, SubWindowHelpBoxType helpBox = SubWindowHelpBoxType.None)
     {
         this.title = title;
         this.active = active;
@@ -126,7 +126,7 @@ public class SubWindowAttribute : Attribute
     /// <param name="windowStyle">窗口样式</param>
     /// <param name="toolbar">是否显示工具栏</param>
     /// <param name="helpBox">帮助栏样式</param>
-    public SubWindowAttribute(string title, string icon, bool active = true, SubWindowStyle windowStyle = SubWindowStyle.Default, SubWindowToolbarType toolbar = SubWindowToolbarType.None, SubWindowHelpBoxType helpBox = SubWindowHelpBoxType.None)
+    public EWSubWindowAttribute(string title, string icon, bool active = true, SubWindowStyle windowStyle = SubWindowStyle.Default, EWSubWindowToolbarType toolbar = EWSubWindowToolbarType.None, SubWindowHelpBoxType helpBox = SubWindowHelpBoxType.None)
     {
         this.title = title;
         this.active = active;
@@ -138,13 +138,16 @@ public class SubWindowAttribute : Attribute
 
 }
 
+/// <summary>
+/// 子窗口-该特性允许自定义子窗口绘制对象，只能用于SubWindowCustomDrawer的子类
+/// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public class SubWindowHandleAttribute : Attribute
+public class EWSubWindowHandleAttribute : Attribute
 {
     /// <summary>
-    /// 目标窗口类型
+    /// 子窗口容器类型
     /// </summary>
-    public Type targetWinType;
+    public Type containerType;
 
     /// <summary>
     /// 是否激活
@@ -156,9 +159,15 @@ public class SubWindowHandleAttribute : Attribute
     /// </summary>
     public SubWindowStyle windowStyle;
 
-    public SubWindowHandleAttribute(Type targetWinType, SubWindowStyle windowStyle = SubWindowStyle.Default, bool active = true)
+    /// <summary>
+    /// 子窗口标签
+    /// </summary>
+    /// <param name="containerType">子窗口容器类型</param>
+    /// <param name="windowStyle">窗口风格</param>
+    /// <param name="active">是否激活</param>
+    public EWSubWindowHandleAttribute(Type containerType, SubWindowStyle windowStyle = SubWindowStyle.Default, bool active = true)
     {
-        this.targetWinType = targetWinType;
+        this.containerType = containerType;
         this.active = active;
         this.windowStyle = windowStyle;
     }

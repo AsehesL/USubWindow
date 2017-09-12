@@ -22,7 +22,7 @@ public class GridSubWindow : SubWindow
     private int m_TileCountX = 0;
     private int m_TileCountY = 0;
 
-    public GridSubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox) : base(title, icon, defaultOpen, method, target, toolbar, helpbox)
+    public GridSubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox) : base(title, icon, defaultOpen, method, target, toolbar, helpbox)
     {
     }
 

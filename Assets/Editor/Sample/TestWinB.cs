@@ -13,7 +13,7 @@ public class TestWinB : MDIEditorWindow {
         TestWinB win = TestWinA.CreateWindow<TestWinB>();
     }
 
-    [SubWindow("Grid", SubWindowIcon.Game, true, SubWindowStyle.Grid)]
+    [EWSubWindow("Grid", EWSubWindowIcon.Game, true, SubWindowStyle.Grid)]
     private void SubWinA(Rect main)
     {
         if (GUI.Button(new Rect(main.x, main.y, 100, 20), "Btn"))
@@ -22,13 +22,13 @@ public class TestWinB : MDIEditorWindow {
         }
     }
 
-    [SubWindow("Preview", SubWindowIcon.Project, true, SubWindowStyle.Preview)]
+    [EWSubWindow("Preview", EWSubWindowIcon.Project, true, SubWindowStyle.Preview)]
     private void SubWinB(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinB");
     }
 
-    [SubWindow("Default", SubWindowIcon.Search)]
+    [EWSubWindow("Default", EWSubWindowIcon.Search)]
     private void SubWinC(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinC");

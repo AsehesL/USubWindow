@@ -39,8 +39,8 @@ public class TestWinG : MDIEditorWindow {
     }
 }
 
-[SubWindowHandle(typeof(TestWinG))]
-class TestDrawerB : SubWindowCustomObjectDrawer
+[EWSubWindowHandle(typeof(TestWinG))]
+class TestDrawerB : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
@@ -48,12 +48,12 @@ class TestDrawerB : SubWindowCustomObjectDrawer
         get { return m_Title; }
     }
 
-    public override SubWindowToolbarType toolBar
+    public override EWSubWindowToolbarType toolBar
     {
         get { return m_ToolBar; }
     }
 
-    private SubWindowToolbarType m_ToolBar = SubWindowToolbarType.None;
+    private EWSubWindowToolbarType m_ToolBar = EWSubWindowToolbarType.None;
 
     private GUIContent m_Title;
 
@@ -99,8 +99,8 @@ class TestDrawerB : SubWindowCustomObjectDrawer
    
 }
 
-[SubWindowHandle(typeof(TestWinG))]
-class TestDrawerC : SubWindowCustomObjectDrawer
+[EWSubWindowHandle(typeof(TestWinG))]
+class TestDrawerC : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
@@ -108,12 +108,12 @@ class TestDrawerC : SubWindowCustomObjectDrawer
         get { return m_Title; }
     }
 
-    public override SubWindowToolbarType toolBar
+    public override EWSubWindowToolbarType toolBar
     {
         get { return m_ToolBar; }
     }
 
-    private SubWindowToolbarType m_ToolBar = SubWindowToolbarType.None;
+    private EWSubWindowToolbarType m_ToolBar = EWSubWindowToolbarType.None;
 
     private GUIContent m_Title;
 

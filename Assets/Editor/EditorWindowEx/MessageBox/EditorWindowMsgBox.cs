@@ -8,7 +8,10 @@ using EditorWinEx.Internal;
 
 public delegate void DrawActionUseObj(Rect rect, System.Object obj);
 
-public class EditorWindowMsgBox : EditorWindowTool
+/// <summary>
+/// MsgBox组件
+/// </summary>
+public class EditorWindowMsgBox : EditorWindowComponentBase
 {
     private Dictionary<int, EWMsgBoxDrawer> m_MsgBoxs = new Dictionary<int, EWMsgBoxDrawer>();
 
@@ -23,6 +26,16 @@ public class EditorWindowMsgBox : EditorWindowTool
 
     private System.Object m_Obj;
 
+    /// <summary>
+    /// 添加MsgBox
+    /// </summary>
+    /// <param name="id">id</param>
+    /// <param name="method">绘制方法</param>
+    /// <param name="target">绘制方法对象</param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
     public void AddMsgBox(int id, MethodInfo method, System.Object target, float x, float y, float width,
         float height)
     {
@@ -36,7 +49,12 @@ public class EditorWindowMsgBox : EditorWindowTool
         m_MsgBoxs.Add(id, msgbox);
     }
 
-    public void AddMsgBox(int id, EWMsgBoxCustomObjectDrawer drawer)
+    /// <summary>
+    /// 添加MsgBox
+    /// </summary>
+    /// <param name="id">id</param>
+    /// <param name="drawer">自定义绘制器对象</param>
+    public void AddMsgBox(int id, EWMsgBoxCustomDrawer drawer)
     {
         if (m_MsgBoxs.ContainsKey(id))
         {
@@ -81,13 +99,13 @@ public class EditorWindowMsgBox : EditorWindowTool
 
     protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
     {
-        System.Object[] atts = method.GetCustomAttributes(typeof(MsgBoxAttribute), false);
+        System.Object[] atts = method.GetCustomAttributes(typeof(EWMsgBoxAttribute), false);
         ParameterInfo[] parameters = method.GetParameters();
         if (atts != null && parameters.Length == 2 && parameters[0].ParameterType == typeof(Rect) && parameters[1].ParameterType == typeof(System.Object))
         {
             for (int j = 0; j < atts.Length; j++)
             {
-                MsgBoxAttribute att = (MsgBoxAttribute)atts[j];
+                EWMsgBoxAttribute att = (EWMsgBoxAttribute)atts[j];
                 AddMsgBox(att.id, method, target, att.x, att.y, att.width, att.height);
             }
         }
@@ -97,20 +115,20 @@ public class EditorWindowMsgBox : EditorWindowTool
     {
         if (container == null)
             return;
-        if (!type.IsSubclassOf(typeof(EWMsgBoxCustomObjectDrawer)))
+        if (!type.IsSubclassOf(typeof(EWMsgBoxCustomDrawer)))
             return;
-        System.Object[] atts = type.GetCustomAttributes(typeof(MsgBoxHandleAttribute), false);
+        System.Object[] atts = type.GetCustomAttributes(typeof(EWMsgBoxHandleAttribute), false);
         for (int i = 0; i < atts.Length; i++)
         {
-            MsgBoxHandleAttribute att = (MsgBoxHandleAttribute)atts[i];
+            EWMsgBoxHandleAttribute att = (EWMsgBoxHandleAttribute)atts[i];
             if (att == null)
                 continue;
             if (att.targetType != container.GetType())
                 continue;
-            EWMsgBoxCustomObjectDrawer drawer = (EWMsgBoxCustomObjectDrawer) System.Activator.CreateInstance(type);
+            EWMsgBoxCustomDrawer drawer = (EWMsgBoxCustomDrawer) System.Activator.CreateInstance(type);
             if (drawer == null)
                 continue;
-            drawer.container = container;
+            drawer.SetContainer(container);
             drawer.closeAction = HideMsgBox;
             AddMsgBox(att.id, drawer);
         }

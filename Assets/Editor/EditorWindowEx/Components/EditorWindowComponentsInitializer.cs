@@ -8,13 +8,19 @@ using UObject = UnityEngine.Object;
 namespace EditorWinEx.Internal
 {
     /// <summary>
-    /// 编辑器工具初始化器
+    /// EditorWindow组件初始化器
     /// </summary>
-    internal class EditorWindowToolsInitializer
+    internal class EditorWindowComponentsInitializer
     {
-
-        public static void InitTools(System.Object container, Type[] types, System.Object[] targets,
-            params EditorWindowTool[] tools)
+        /// <summary>
+        /// 初始化组件
+        /// </summary>
+        /// <param name="container">组件容器</param>
+        /// <param name="types">handle类型列表</param>
+        /// <param name="targets">handle列表</param>
+        /// <param name="tools">组件列表</param>
+        public static void InitComponents(System.Object container, Type[] types, System.Object[] targets,
+            params EditorWindowComponentBase[] tools)
         {
             if (targets == null || types == null)
                 return;
@@ -32,7 +38,7 @@ namespace EditorWinEx.Internal
             }
 
             {
-                Assembly assembly = typeof (EditorWindowToolsInitializer).Assembly;
+                Assembly assembly = typeof (EditorWindowComponentsInitializer).Assembly;
                 Type[] globalTypes = assembly.GetTypes();
                 for (int i = 0; i < globalTypes.Length; i++)
                 {
@@ -50,7 +56,7 @@ namespace EditorWinEx.Internal
         }
 
         private static void RegisterInstanceMethod(System.Object container, Type type, System.Object target,
-            EditorWindowTool[] tools)
+            EditorWindowComponentBase[] tools)
         {
             MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             for (int i = 0; i < methods.Length; i++)
@@ -63,7 +69,7 @@ namespace EditorWinEx.Internal
             }
         }
 
-        private static void RegisterClass(System.Object container, Type type, EditorWindowTool[] tools)
+        private static void RegisterClass(System.Object container, Type type, EditorWindowComponentBase[] tools)
         {
             if (type.IsAbstract)
                 return;

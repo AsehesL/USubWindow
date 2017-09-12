@@ -3,12 +3,24 @@ using System.Collections;
 
 namespace EditorWinEx.Internal
 {
-    internal abstract class CustomObjectDrawerWarpperBase
+    /// <summary>
+    /// 组件绘制器基类
+    /// </summary>
+    internal abstract class EWComponentDrawerBase
     {
+        /// <summary>
+        /// 是否初始化
+        /// </summary>
         public bool IsInitialized { get; private set; }
 
+        /// <summary>
+        /// 是否激活
+        /// </summary>
         public bool IsEnabled { get; private set; }
 
+        /// <summary>
+        /// 初始化绘制器
+        /// </summary>
         public void Init()
         {
             if (IsInitialized)
@@ -18,6 +30,9 @@ namespace EditorWinEx.Internal
             IsInitialized = true;
         }
 
+        /// <summary>
+        /// 激活绘制器
+        /// </summary>
         public void Enable()
         {
             if (!IsEnabled)
@@ -25,6 +40,9 @@ namespace EditorWinEx.Internal
             IsEnabled = true;
         }
 
+        /// <summary>
+        /// 关闭绘制器
+        /// </summary>
         public void Disable()
         {
             if (IsEnabled)
@@ -32,6 +50,9 @@ namespace EditorWinEx.Internal
             IsEnabled = false;
         }
 
+        /// <summary>
+        /// 销毁绘制器
+        /// </summary>
         public void Destroy()
         {
             Disable();

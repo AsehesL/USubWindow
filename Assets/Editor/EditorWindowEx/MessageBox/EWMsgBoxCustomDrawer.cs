@@ -2,7 +2,10 @@
 using System.Collections;
 using System;
 
-public abstract class EWMsgBoxCustomObjectDrawer : CustomObjectDrawerBase
+/// <summary>
+/// 自定义MsgBox绘制器
+/// </summary>
+public abstract class EWMsgBoxCustomDrawer : CustomEWComponentDrawerBase
 {
 
     public abstract float X { get; }

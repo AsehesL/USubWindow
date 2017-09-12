@@ -9,7 +9,7 @@ using EditorWinEx.Internal;
 /// <summary>
 /// 工具栏树
 /// </summary>
-public class ToolBarTree : EditorWindowTool
+public class ToolBarTree : EditorWindowComponentBase
 {
     /// <summary>
     /// 选项数量
@@ -92,13 +92,13 @@ public class ToolBarTree : EditorWindowTool
 
     protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
     {
-        System.Object[] atts = method.GetCustomAttributes(typeof(ToolBarAttribute), false);
+        System.Object[] atts = method.GetCustomAttributes(typeof(EWToolBarAttribute), false);
         ParameterInfo[] parameters = method.GetParameters();
         if (atts != null && parameters.Length == 0)
         {
             for (int j = 0; j < atts.Length; j++)
             {
-                ToolBarAttribute att = (ToolBarAttribute)atts[j];
+                EWToolBarAttribute att = (EWToolBarAttribute)atts[j];
                 InsertItem(att.menuItem, method, target, att.priority);
             }
         }

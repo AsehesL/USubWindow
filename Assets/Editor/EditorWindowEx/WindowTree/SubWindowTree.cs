@@ -12,7 +12,7 @@ namespace EditorWinEx.Internal
     /// <summary>
     /// 子窗体树
     /// </summary>
-    internal class SubWindowTree : EditorWindowTool
+    internal class SubWindowTree : EditorWindowComponentBase
     {
         /// <summary>
         /// 当前使用中的布局-null为默认布局
@@ -68,11 +68,11 @@ namespace EditorWinEx.Internal
 
         protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
         {
-            System.Object[] atts = method.GetCustomAttributes(typeof (SubWindowAttribute), false);
+            System.Object[] atts = method.GetCustomAttributes(typeof (EWSubWindowAttribute), false);
 
             for (int j = 0; j < atts.Length; j++)
             {
-                SubWindowAttribute att = (SubWindowAttribute) atts[j];
+                EWSubWindowAttribute att = (EWSubWindowAttribute) atts[j];
                 System.Object obj = SubWindowFactory.CreateSubWindow(att.windowStyle, att.title, att.iconPath,
                     att.active,
                     method, target, att.toolbar, att.helpBox);
@@ -88,15 +88,15 @@ namespace EditorWinEx.Internal
         {
             if (container == null)
                 return;
-            if (!type.IsSubclassOf(typeof (SubWindowCustomObjectDrawer)))
+            if (!type.IsSubclassOf(typeof (SubWindowCustomDrawer)))
                 return;
-            System.Object[] atts = type.GetCustomAttributes(typeof (SubWindowHandleAttribute), false);
+            System.Object[] atts = type.GetCustomAttributes(typeof (EWSubWindowHandleAttribute), false);
             for (int i = 0; i < atts.Length; i++)
             {
-                SubWindowHandleAttribute att = (SubWindowHandleAttribute) atts[i];
+                EWSubWindowHandleAttribute att = (EWSubWindowHandleAttribute) atts[i];
                 if (att == null)
                     continue;
-                if (att.targetWinType != container.GetType())
+                if (att.containerType != container.GetType())
                     continue;
                 System.Object obj = SubWindowFactory.CreateSubWindow(container, att.active, att.windowStyle, type);
                 if (obj != null)

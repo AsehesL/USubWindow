@@ -2,7 +2,10 @@
 using System.Collections;
 using System;
 
-public abstract class SubWindowCustomObjectDrawer : CustomObjectDrawerBase
+/// <summary>
+/// SubWindow自定义绘制器
+/// </summary>
+public abstract class SubWindowCustomDrawer : CustomEWComponentDrawerBase
 {
 
     public SubWindowHelpBox helpBox
@@ -36,7 +39,7 @@ public abstract class SubWindowCustomObjectDrawer : CustomObjectDrawerBase
 
     public abstract GUIContent Title { get; }
 
-    public abstract SubWindowToolbarType toolBar { get; }
+    public abstract EWSubWindowToolbarType toolBar { get; }
 
     public virtual void DrawMainWindow(Rect mainRect) { }
 

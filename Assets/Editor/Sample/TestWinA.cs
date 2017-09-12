@@ -13,25 +13,25 @@ public class TestWinA : MDIEditorWindow {
         TestWinA win = TestWinA.CreateWindow<TestWinA>();
     }
 
-    [SubWindow("SunWinA", SubWindowIcon.Game)]
+    [EWSubWindow("SunWinA", EWSubWindowIcon.Game)]
     private void SubWinA(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinA");
     }
 
-    [SubWindow("SunWinB", SubWindowIcon.Project)]
+    [EWSubWindow("SunWinB", EWSubWindowIcon.Project)]
     private void SubWinB(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinB");
     }
 
-    [SubWindow("SunWinC", SubWindowIcon.Search)]
+    [EWSubWindow("SunWinC", EWSubWindowIcon.Search)]
     private void SubWinC(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinC");
     }
 
-    [SubWindow("SunWinD", SubWindowIcon.None)]
+    [EWSubWindow("SunWinD", EWSubWindowIcon.None)]
     private void SubWinD(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinD");

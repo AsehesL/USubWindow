@@ -13,13 +13,13 @@ public class TestWinE : MDIEditorWindow {
         TestWinE win = TestWinA.CreateWindow<TestWinE>();
     }
 
-    [SubWindow("SunWinA", SubWindowIcon.Game)]
+    [EWSubWindow("SunWinA", EWSubWindowIcon.Game)]
     private void SubWinA(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinA");
     }
 
-    [SubWindow("SunWinB", SubWindowIcon.Project)]
+    [EWSubWindow("SunWinB", EWSubWindowIcon.Project)]
     private void SubWinB(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinB");
@@ -31,8 +31,8 @@ public class TestWinE : MDIEditorWindow {
     }
 }
 
-[SubWindowHandle(typeof(TestWinE))]
-class TestDrawerA : SubWindowCustomObjectDrawer
+[EWSubWindowHandle(typeof(TestWinE))]
+class TestDrawerA : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
@@ -40,12 +40,12 @@ class TestDrawerA : SubWindowCustomObjectDrawer
         get { return m_Title; }
     }
 
-    public override SubWindowToolbarType toolBar
+    public override EWSubWindowToolbarType toolBar
     {
         get { return m_ToolBar; }
     }
 
-    private SubWindowToolbarType m_ToolBar = SubWindowToolbarType.None;
+    private EWSubWindowToolbarType m_ToolBar = EWSubWindowToolbarType.None;
 
     private GUIContent m_Title;
 
@@ -63,11 +63,11 @@ class TestDrawerA : SubWindowCustomObjectDrawer
         }
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 20, mainRect.width, 20), "显示Toolbar"))
         {
-            m_ToolBar = SubWindowToolbarType.Normal;
+            m_ToolBar = EWSubWindowToolbarType.Normal;
         }
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 40, mainRect.width, 20), "关闭Toolbar"))
         {
-            m_ToolBar = SubWindowToolbarType.None;
+            m_ToolBar = EWSubWindowToolbarType.None;
         }
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 60, mainRect.width, 20), "显示HelpBox"))
         {

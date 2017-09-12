@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace EditorWinEx.Internal
 {
+    /// <summary>
+    /// SubWindow布局
+    /// </summary>
     internal class SubWindowLayout
     {
         public List<string> Layouts

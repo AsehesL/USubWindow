@@ -11,7 +11,7 @@ using EditorWinEx;
 public class PreviewSubWindow : SubWindow
 {
 
-    public PreviewSubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
+    public PreviewSubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
         : base(title, icon, defaultOpen, method, target, toolbar, helpbox)
     {
     }

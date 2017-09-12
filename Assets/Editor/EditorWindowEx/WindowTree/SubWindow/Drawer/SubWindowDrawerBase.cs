@@ -6,7 +6,10 @@ using UnityEditor;
 
 namespace EditorWinEx.Internal
 {
-    internal abstract class SubWindowDrawerBase : CustomObjectDrawerWarpperBase
+    /// <summary>
+    /// SubWindow组件绘制器
+    /// </summary>
+    internal abstract class SubWindowDrawerBase : EWComponentDrawerBase
     {
         /// <summary>
         /// 标题
@@ -15,7 +18,7 @@ namespace EditorWinEx.Internal
 
         public abstract string Id { get; }
 
-        protected abstract SubWindowToolbarType toolBar { get; }
+        protected abstract EWSubWindowToolbarType toolBar { get; }
 
         /// <summary>
         /// 帮助栏
@@ -24,14 +27,14 @@ namespace EditorWinEx.Internal
 
         public Rect DrawToolBar(ref Rect rect)
         {
-            if (toolBar == SubWindowToolbarType.Normal)
+            if (toolBar == EWSubWindowToolbarType.Normal)
             {
                 Rect h = new Rect(rect.x, rect.y, rect.width, 18);
                 rect = new Rect(rect.x, rect.y + 18, rect.width, rect.height - 18);
                 GUI.Box(h, string.Empty, GUIStyleCache.GetStyle("Toolbar"));
                 return h;
             }
-            else if (toolBar == SubWindowToolbarType.Mini)
+            else if (toolBar == EWSubWindowToolbarType.Mini)
             {
                 Rect h = new Rect(rect.x, rect.y, rect.width, 15);
                 rect = new Rect(rect.x, rect.y + 15, rect.width, rect.height - 15);
@@ -84,7 +87,7 @@ namespace EditorWinEx.Internal
             get { return m_Title; }
         }
 
-        protected override SubWindowToolbarType toolBar
+        protected override EWSubWindowToolbarType toolBar
         {
             get { return m_ToolBar; }
         }
@@ -107,7 +110,7 @@ namespace EditorWinEx.Internal
         /// </summary>
         private System.Object m_Target;
 
-        private SubWindowToolbarType m_ToolBar;
+        private EWSubWindowToolbarType m_ToolBar;
 
         private string m_ID;
 
@@ -117,7 +120,7 @@ namespace EditorWinEx.Internal
         private SubWindowHelpBox m_HelpBox = null;
 
         public SubWindowMethodDrawer(string title, string icon, MethodInfo method, System.Object target,
-            SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
+            EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
         {
             this.m_Title = CreateTitle(title, icon);
             this.m_Method = method;
@@ -151,7 +154,7 @@ namespace EditorWinEx.Internal
                 if (m_Params.Length > 0)
                     m_Params[0] = mainRect;
                 if (m_Params.Length > 1)
-                    if (m_ToolBar == SubWindowToolbarType.None)
+                    if (m_ToolBar == EWSubWindowToolbarType.None)
                         m_Params[1] = helpboxRect;
                     else
                         m_Params[1] = toolbarRect;
@@ -189,16 +192,16 @@ namespace EditorWinEx.Internal
             get { return m_ObjDrawer.Title; }
         }
 
-        protected override SubWindowToolbarType toolBar
+        protected override EWSubWindowToolbarType toolBar
         {
             get { return m_ObjDrawer.toolBar; }
         }
 
-        private SubWindowCustomObjectDrawer m_ObjDrawer;
+        private SubWindowCustomDrawer m_ObjDrawer;
 
         private string m_Id;
 
-        public SubWindowObjectDrawer(SubWindowCustomObjectDrawer drawer)
+        public SubWindowObjectDrawer(SubWindowCustomDrawer drawer)
         {
             this.m_ObjDrawer = drawer;
             this.m_Id = drawer.GetType().FullName;
