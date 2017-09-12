@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System;
 
 /// <summary>
 /// SubWindow自定义SubWindow对象范例
@@ -32,7 +33,7 @@ public class TestWinE : MDIEditorWindow {
 }
 
 [EWSubWindowHandle(typeof(TestWinE))]
-class TestDrawerA : SubWindowCustomDrawer
+class TestDrawerForTestWinE : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
@@ -49,7 +50,7 @@ class TestDrawerA : SubWindowCustomDrawer
 
     private GUIContent m_Title;
 
-    public TestDrawerA()
+    public TestDrawerForTestWinE()
     {
         m_Title = new GUIContent("DefaultTitle");
     }
@@ -107,4 +108,45 @@ class TestDrawerA : SubWindowCustomDrawer
         Debug.Log("Enalbe");
     }
    
+}
+
+[EWSubWindowHandle(typeof(TestWinE))]
+class TestDrawerForTestWinE2 : SubWindowCustomDrawer, ISubWinCustomMenu, ISubWinLock
+{
+    public override GUIContent Title
+    {
+        get { return m_Title; }
+    }
+
+    public override EWSubWindowToolbarType toolBar
+    {
+        get { return EWSubWindowToolbarType.None; }
+    }
+
+    private GUIContent m_Title;
+
+    public TestDrawerForTestWinE2()
+    {
+        m_Title = new GUIContent("DefaultTitle2");
+    }
+
+    public void SetLockActive(bool isLockActive)
+    {
+        if (isLockActive)
+            Debug.Log("窗口上锁");
+        else
+            Debug.Log("窗口解锁");
+    }
+
+    public void AddCustomMenu(GenericMenu menu)
+    {
+        menu.AddItem(new GUIContent("Test1"), false, ClickMenu);
+        menu.AddItem(new GUIContent("Test2"), false, ClickMenu);
+        menu.AddItem(new GUIContent("Test3"), false, ClickMenu);
+    }
+
+    private void ClickMenu()
+    {
+        Debug.Log("按下了菜单");
+    }
 }

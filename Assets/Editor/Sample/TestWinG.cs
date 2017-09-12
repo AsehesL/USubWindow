@@ -40,7 +40,7 @@ public class TestWinG : MDIEditorWindow {
 }
 
 [EWSubWindowHandle(typeof(TestWinG))]
-class TestDrawerB : SubWindowCustomDrawer
+class TestDrawerForTestWinG : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
@@ -59,7 +59,7 @@ class TestDrawerB : SubWindowCustomDrawer
 
     private float m_Number;
 
-    public TestDrawerB()
+    public TestDrawerForTestWinG()
     {
         m_Title = new GUIContent("窗口1");
     }
@@ -100,7 +100,7 @@ class TestDrawerB : SubWindowCustomDrawer
 }
 
 [EWSubWindowHandle(typeof(TestWinG))]
-class TestDrawerC : SubWindowCustomDrawer
+class TestDrawerForTestWinG2 : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
@@ -119,7 +119,7 @@ class TestDrawerC : SubWindowCustomDrawer
 
     private int m_MessageCount;
 
-    public TestDrawerC()
+    public TestDrawerForTestWinG2()
     {
         m_Title = new GUIContent("窗口2");
     }

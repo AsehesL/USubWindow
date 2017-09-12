@@ -89,12 +89,9 @@ namespace EditorWinEx.Internal
                     repaintAction();
             }
 
-            if (GUI.Button(new Rect(rect.width - 21, 4, 13, 11), string.Empty, GUIStyleCache.GetStyle("WinBtnClose")))
+            if (m_SelectSubWindow >= 0 && m_SelectSubWindow < m_SubWindows.Count)
             {
-                if (m_SelectSubWindow >= 0 && m_SelectSubWindow < m_SubWindows.Count)
-                {
-                    m_SubWindows[m_SelectSubWindow].Close();
-                }
+                m_SubWindows[m_SelectSubWindow].DrawToolBarExt(new Rect(rect.width - 100, 0, 100, 18));
             }
 
             GUI.EndGroup();

@@ -85,6 +85,19 @@ public class SubWindow
     }
 
     /// <summary>
+    /// 绘制工具栏区域
+    /// </summary>
+    /// <param name="rect"></param>
+    public void DrawToolBarExt(Rect rect)
+    {
+        if (GUI.Button(new Rect(rect.x + rect.width - 21, rect.y + 4, 13, 13), string.Empty, GUIStyleCache.GetStyle("WinBtnClose")))
+        {
+            Close();
+        }
+        m_Drawer.DrawLeafToolBar(new Rect(rect.x, rect.y, rect.width - 27, rect.height));
+    }
+
+    /// <summary>
     /// 关闭窗口
     /// </summary>
     public void Close()
