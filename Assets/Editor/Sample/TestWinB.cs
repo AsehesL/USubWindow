@@ -8,7 +8,7 @@ using System.Collections;
 public class TestWinB : MDIEditorWindow {
 
     [MenuItem("SubWindow范例/2.样式范例")]
-    static void Init()
+    static void InitWin()
     {
         TestWinB win = TestWinA.CreateWindow<TestWinB>();
     }

@@ -9,7 +9,7 @@ using System;
 public class TestWinE : MDIEditorWindow {
 
     [MenuItem("SubWindow范例/5.自定义SubWindow对象范例")]
-    static void Init()
+    static void InitWin()
     {
         TestWinE win = TestWinA.CreateWindow<TestWinE>();
     }

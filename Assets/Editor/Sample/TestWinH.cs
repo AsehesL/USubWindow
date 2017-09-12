@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System;
 
 /// <summary>
 /// SubWindow动态窗口范例
 /// </summary>
-public class TestWinH : MDIEditorWindow {
-
-
+public class TestWinH : MDIEditorWindow
+{
 
     [MenuItem("SubWindow范例/8.动态窗口范例")]
-    static void Init()
+    static void InitWin()
     {
         TestWinH win = TestWinA.CreateWindow<TestWinH>();
     }
@@ -48,5 +48,38 @@ public class TestWinH : MDIEditorWindow {
     private void Test4()
     {
         RemoveDynamicSubWindow(SubWinB);
+    }
+
+    [EWToolBar("工具/创建动态窗口C")]
+    private void Test5()
+    {
+        AddDynamicSubWindow(new DynamicWin("动态窗口C"));
+    }
+
+
+    [EWToolBar("工具/移除动态窗口C")]
+    private void Test6()
+    {
+        RemoveDynamicSubWindow(typeof(DynamicWin));
+    }
+
+    private class DynamicWin : SubWindowCustomDrawer
+    {
+        public override GUIContent Title
+        {
+            get { return m_Title; }
+        }
+
+        public override EWSubWindowToolbarType toolBar
+        {
+            get { return EWSubWindowToolbarType.Normal; }
+        }
+
+        private GUIContent m_Title;
+
+        public DynamicWin(string title)
+        {
+            m_Title = new GUIContent(title);
+        }
     }
 }

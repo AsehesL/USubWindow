@@ -81,7 +81,7 @@ namespace EditorWinEx.Internal
         public virtual void DrawGUI(Rect rect, System.Action repaintAction)
         {
             float offset = 0;
-            Rect resizeRect = default(Rect);
+            //Rect resizeRect = default(Rect);
             if (isHorizontal)
             {
                 for (int i = 0; i < m_Childs.Count; i++)

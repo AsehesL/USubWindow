@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
@@ -35,7 +36,23 @@ namespace EditorWinEx.Internal
         public SubWindowObjectDrawer(SubWindowCustomDrawer drawer)
         {
             this.m_ObjDrawer = drawer;
-            this.m_Id = drawer.GetType().FullName;
+            this.m_Id = GetDrawerID(drawer);
+        }
+
+        internal static string GetDrawerID(SubWindowCustomDrawer drawer)
+        {
+            if (drawer == null)
+                return null;
+            return "__CLASS__" + drawer.GetType().FullName;
+        }
+
+        internal static string GetDrawerIDByType(Type type)
+        {
+            if (type == null)
+                return null;
+            if(type.IsSubclassOf(typeof(SubWindowCustomDrawer)))
+                return "__CLASS__" + type.FullName;
+            return null;
         }
 
         public override void DrawWindow(Rect mainRect, Rect toolbarRect, Rect helpboxRect)

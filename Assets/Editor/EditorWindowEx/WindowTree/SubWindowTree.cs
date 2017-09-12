@@ -128,54 +128,46 @@ namespace EditorWinEx.Internal
         public void AddWindow(SubWindow window)
         {
             m_SubWindowList.Add(window);
-            //if (active)
             {
                 window.Open();
                 this.InsertWindow(window);
             }
         }
 
-        /// <summary>
-        /// 设置指定ID窗口激活状态
-        /// </summary>
-        /// <param name="windowId"></param>
-        /// <param name="active"></param>
-        public void SetSubWindowActive(MethodInfo method, System.Object target, bool active)
+        public bool RemoveWindow(Delegate method)
         {
-            if (method == null || target == null) return;
-            string windowId = target.GetType().FullName + "." + method.Name;
-            SetSubWindowActive(windowId, active);
+            string id = null;
+            if (method == null)
+                id = SubWindowMethodDrawer.GetMethodID(null, null);
+            else
+                id = SubWindowMethodDrawer.GetMethodID(method.Method, method.Target);
+            return RemoveWindowByID(id);
         }
 
-        /// <summary>
-        /// 设置指定ID窗口激活状态
-        /// </summary>
-        /// <param name="windowId"></param>
-        /// <param name="active"></param>
-        public void SetSubWindowActive(string windowId, bool active)
+        public bool RemoveWindow(SubWindowCustomDrawer drawer)
         {
-            var sw = m_SubWindowList.Find(x => x.GetIndentifier() == windowId);
-            if (sw != null)
-            {
-                if (active && !sw.IsOpen)
-                {
-                    this.InsertWindow(sw);
-                    return;
-                }
-                if (!active && sw.IsOpen)
-                {
-                    sw.Close();
-                    return;
-                }
-            }
+            string id = null;
+            if (drawer == null)
+                id = SubWindowObjectDrawer.GetDrawerID(null);
+            else
+                id = SubWindowObjectDrawer.GetDrawerID(drawer);
+            return RemoveWindowByID(id);
+        }
+
+        public bool RemoveWindow(Type drawerType)
+        {
+            string id = SubWindowObjectDrawer.GetDrawerIDByType(drawerType);
+            return RemoveWindowByID(id);
         }
 
         /// <summary>
         /// 根据ID移除窗口
         /// </summary>
         /// <param name="windowId">窗口ID</param>
-        public void RemoveWindowByID(string windowId)
+        private bool RemoveWindowByID(string windowId)
         {
+            if (string.IsNullOrEmpty(windowId))
+                return false;
             if (this.m_SubWindowList != null)
             {
                 for (int i = 0; i < m_SubWindowList.Count; i++)
@@ -193,10 +185,11 @@ namespace EditorWinEx.Internal
                             }
                         }
                         this.m_SubWindowList.RemoveAt(i);
-                        return;
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         public void RemoveAllDynamicWindow()

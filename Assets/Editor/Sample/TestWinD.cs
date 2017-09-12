@@ -14,7 +14,7 @@ public class TestWinD : MDIEditorWindow {
     }
 
     [MenuItem("SubWindow范例/4.主工具栏扩展和自定义消息弹框范例")]
-    static void Init()
+    static void InitWin()
     {
         TestWinD win = TestWinA.CreateWindow<TestWinD>();
     }

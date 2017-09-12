@@ -105,54 +105,6 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     }
 
     /// <summary>
-    /// 打开SubWindow
-    /// </summary>
-    /// <param name="id"></param>
-    public void OpenSubWindow(string id)
-    {
-        SetSubWindowActive(id, true);
-    }
-
-    public void OpenSubWindow(SubWindowAction action)
-    {
-        SetSubWindowActive(action, true);
-    }
-
-    public void OpenSubWindow(SubWindowActionHalf action)
-    {
-        SetSubWindowActive(action, true);
-    }
-
-    public void OpenSubWindow(SubWindowActionFull action)
-    {
-        SetSubWindowActive(action, true);
-    }
-
-    /// <summary>
-    /// 关闭SubWindow
-    /// </summary>
-    /// <param name="id"></param>
-    public void CloseSubWindow(string id)
-    {
-        SetSubWindowActive(id, false);
-    }
-
-    public void CloseSubWindow(SubWindowAction action)
-    {
-        SetSubWindowActive(action, false);
-    }
-
-    public void CloseSubWindow(SubWindowActionHalf action)
-    {
-        SetSubWindowActive(action, false);
-    }
-
-    public void CloseSubWindow(SubWindowActionFull action)
-    {
-        SetSubWindowActive(action, false);
-    }
-
-    /// <summary>
     /// 动态添加子窗体
     /// </summary>
     /// <param name="title">标题</param>
@@ -265,6 +217,25 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     }
 
     /// <summary>
+    /// 添加动态窗口
+    /// </summary>
+    /// <param name="drawer"></param>
+    public void AddDynamicSubWindow(SubWindowCustomDrawer drawer)
+    {
+        if (drawer == null)
+            return;
+        if (m_WindowTree != null)
+        {
+            string id = drawer.GetType().FullName;
+            if (this.m_WindowTree.ContainWindowID(id))
+                return;
+            SubWindow window = new SubWindow(true, drawer);
+            window.isDynamic = true;
+            this.m_WindowTree.AddWindow(window);
+        }
+    }
+
+    /// <summary>
     /// 移除动态窗口
     /// </summary>
     /// <param name="action"></param>
@@ -289,6 +260,24 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     public void RemoveDynamicSubWindow(SubWindowActionFull action)
     {
         this.RemoveDynamicSubWindowInternal(action);
+    }
+
+    public bool RemoveDynamicSubWindow(SubWindowCustomDrawer drawer)
+    {
+        if (drawer == null)
+            return false;
+        if (m_WindowTree != null)
+            return m_WindowTree.RemoveWindow(drawer);
+        return false;
+    }
+
+    public bool RemoveDynamicSubWindow(Type drawerType)
+    {
+        if (drawerType == null)
+            return false;
+        if (m_WindowTree != null)
+            return m_WindowTree.RemoveWindow(drawerType);
+        return false;
     }
 
     /// <summary>
@@ -447,22 +436,6 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
 
     }
 
-    private void SetSubWindowActive(string windowId, bool active)
-    {
-        if (m_WindowTree != null && !string.IsNullOrEmpty(windowId))
-        {
-            m_WindowTree.SetSubWindowActive(windowId, active);
-        }
-    }
-
-    private void SetSubWindowActive(Delegate action, bool active)
-    {
-        if (m_WindowTree != null && action != null)
-        {
-            m_WindowTree.SetSubWindowActive(action.Method, action.Target, active);
-        }
-    }
-
     private void AddDynamicSubWindowInternal(string title, EWSubWindowIcon icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
         Delegate action)
     {
@@ -483,13 +456,13 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         }
     }
 
-    private void RemoveDynamicSubWindowInternal(Delegate action)
+    private bool RemoveDynamicSubWindowInternal(Delegate action)
     {
         if (m_WindowTree != null)
         {
-            string id = action.Target.GetType().FullName + "." + action.Method.Name;
-            this.m_WindowTree.RemoveWindowByID(id);
+            return m_WindowTree.RemoveWindow(action);
         }
+        return false;
     }
 
     public Type GetContainerType()

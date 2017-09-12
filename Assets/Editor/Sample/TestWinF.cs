@@ -10,7 +10,7 @@ using EditorWinEx.Internal;
 public class TestWinF : MDIEditorWindow {
 
     [MenuItem("SubWindow范例/6.自定义消息弹框范例")]
-    static void Init()
+    static void InitWin()
     {
         TestWinF win = TestWinA.CreateWindow<TestWinF>();
     }

@@ -54,6 +54,18 @@ namespace EditorWinEx.Internal
         /// </summary>
         private SubWindowHelpBox m_HelpBox = null;
 
+        internal static string GetMethodID(MethodInfo method, System.Object target)
+        {
+            if (target == null && method == null)
+                return "__METHOD__UnKnownClass.UnKnownMethod";
+            else if (target == null)
+                return "__METHOD__UnKnownClass." + method.Name;
+            else if (method == null)
+                return "__METHOD__" + target.GetType().FullName + ".UnKnownMethod";
+            else
+                return "__METHOD__" + target.GetType().FullName + "." + method.Name;
+        }
+
         public SubWindowMethodDrawer(string title, string icon, MethodInfo method, System.Object target,
             EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
         {
@@ -62,14 +74,7 @@ namespace EditorWinEx.Internal
             this.m_ToolBar = toolbar;
             this.m_HelpBox = SubWindowHelpBox.CreateHelpBox(helpbox);
             this.m_Target = target;
-            if (target == null && method == null)
-                this.m_ID = "UnKnownClass.UnKnownMethod";
-            else if (target == null)
-                this.m_ID = "UnKnownClass." + method.Name;
-            else if (method == null)
-                this.m_ID = target.GetType().FullName + ".UnKnownMethod";
-            else
-                this.m_ID = target.GetType().FullName + "." + method.Name;
+            this.m_ID = GetMethodID(method, target);
             if (this.m_Method != null)
             {
                 ParameterInfo[] p = this.m_Method.GetParameters();
