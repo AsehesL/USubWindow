@@ -36,15 +36,14 @@ public class EditorWindowMsgBox : EditorWindowComponentBase
     /// <param name="y"></param>
     /// <param name="width"></param>
     /// <param name="height"></param>
-    public void AddMsgBox(int id, MethodInfo method, System.Object target, float x, float y, float width,
-        float height)
+    public void AddMsgBox(int id, MethodInfo method, System.Object target, EWRectangle rectangle)
     {
         if (m_MsgBoxs.ContainsKey(id))
         {
             Debug.LogError("错误,已经包含该ID的MsgBox方法:" + id);
             return;
         }
-        EWMsgBoxMethodDrawer msgbox = new EWMsgBoxMethodDrawer(method, target, x, y, width, height);
+        EWMsgBoxMethodDrawer msgbox = new EWMsgBoxMethodDrawer(method, target, rectangle);
         msgbox.Init();
         m_MsgBoxs.Add(id, msgbox);
     }
@@ -106,7 +105,7 @@ public class EditorWindowMsgBox : EditorWindowComponentBase
             for (int j = 0; j < atts.Length; j++)
             {
                 EWMsgBoxAttribute att = (EWMsgBoxAttribute)atts[j];
-                AddMsgBox(att.id, method, target, att.x, att.y, att.width, att.height);
+                AddMsgBox(att.id, method, target, att.Rectangle);
             }
         }
     }

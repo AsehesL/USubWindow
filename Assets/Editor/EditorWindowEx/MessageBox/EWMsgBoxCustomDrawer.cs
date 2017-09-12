@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using EditorWinEx.Internal;
 
 /// <summary>
 /// 自定义MsgBox绘制器
@@ -8,13 +9,7 @@ using System;
 public abstract class EWMsgBoxCustomDrawer : CustomEWComponentDrawerBase
 {
 
-    public abstract float X { get; }
-
-    public abstract float Y { get; }
-
-    public abstract float Width { get; }
-
-    public abstract float Height { get; }
+    public abstract EWRectangle Recttangle { get; }
 
     public System.Action closeAction;
 

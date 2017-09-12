@@ -9,7 +9,7 @@ public class TestWinH : MDIEditorWindow {
 
 
 
-    [MenuItem("Test/TestWinH")]
+    [MenuItem("SubWindow范例/8.动态窗口范例")]
     static void Init()
     {
         TestWinH win = TestWinA.CreateWindow<TestWinH>();

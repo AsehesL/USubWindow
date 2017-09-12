@@ -15,7 +15,7 @@ public class TestWinG : MDIEditorWindow {
         NotifyMainWindow,
     }
 
-    [MenuItem("Test/TestWinG")]
+    [MenuItem("SubWindow范例/7.自定义窗体、主窗体间的消息通信范例")]
     static void Init()
     {
         TestWinG win = TestWinA.CreateWindow<TestWinG>();

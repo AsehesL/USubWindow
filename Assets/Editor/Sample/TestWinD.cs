@@ -13,7 +13,7 @@ public class TestWinD : MDIEditorWindow {
         Msg2,
     }
 
-    [MenuItem("Test/TestWinD")]
+    [MenuItem("SubWindow范例/4.主工具栏扩展和自定义消息弹框范例")]
     static void Init()
     {
         TestWinD win = TestWinA.CreateWindow<TestWinD>();
@@ -73,7 +73,7 @@ public class TestWinD : MDIEditorWindow {
         }
     }
 
-    [EWMsgBox((int)TestMsg.Msg2, 0.2f, 0.2f, 0.6f, 0.6f)]
+    [EWMsgBox((int)TestMsg.Msg2, 100, 100, 200, 200, true, true, true, true)]
     private void Msg2(Rect rect, System.Object obj)
     {
         if (obj != null)

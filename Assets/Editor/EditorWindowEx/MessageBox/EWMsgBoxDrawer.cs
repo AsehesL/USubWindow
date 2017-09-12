@@ -11,15 +11,11 @@ namespace EditorWinEx.Internal
     internal abstract class EWMsgBoxDrawer : EWComponentDrawerBase
     {
 
-        protected abstract float X { get; }
-        protected abstract float Y { get; }
-        protected abstract float Width { get; }
-        protected abstract float Height { get; }
+        protected abstract EWRectangle Rectangle { get; }
 
         public void DrawMsgBox(Rect rect, System.Object obj)
         {
-            Rect main = new Rect(rect.x + rect.width * X, rect.y + rect.height * Y, rect.width * Width,
-               rect.height * Height);
+            Rect main = Rectangle.GetRect(rect);
 
             GUI.Box(main, "", GUIStyleCache.GetStyle("WindowBackground"));
             OnDrawMsgBox(main, obj);
@@ -42,41 +38,21 @@ namespace EditorWinEx.Internal
 
     internal class EWMsgBoxMethodDrawer : EWMsgBoxDrawer
     {
-        protected override float Height
+        protected override EWRectangle Rectangle
         {
-            get { return m_Height; }
+            get { return m_Rectangle; }
         }
-
-        protected override float Width
-        {
-            get { return m_Width; }
-        }
-
-        protected override float X
-        {
-            get { return m_X; }
-        }
-
-        protected override float Y
-        {
-            get { return m_Y; }
-        }
-
-        private readonly float m_X;
-        private readonly float m_Y;
-        private readonly float m_Width;
-        private readonly float m_Height;
 
         private DrawActionUseObj m_DrawAction;
 
-        public EWMsgBoxMethodDrawer(MethodInfo method, System.Object target, float x, float y, float width, float height)
+        private EWRectangle m_Rectangle;
+
+        public EWMsgBoxMethodDrawer(MethodInfo method, System.Object target, EWRectangle rectangle)
         {
             if (method != null && target != null)
                 m_DrawAction = Delegate.CreateDelegate(typeof (DrawActionUseObj), target, method) as DrawActionUseObj;
-            this.m_X = x;
-            this.m_Y = y;
-            this.m_Width = width;
-            this.m_Height = height;
+
+            this.m_Rectangle = rectangle;
         }
 
         protected override bool OnInit()
@@ -93,24 +69,9 @@ namespace EditorWinEx.Internal
 
     internal class EWMsgBoxObjectDrawer : EWMsgBoxDrawer
     {
-        protected override float X
+        protected override EWRectangle Rectangle
         {
-            get { return m_Drawer.X;  }
-        }
-
-        protected override float Y
-        {
-            get { return m_Drawer.Y; }
-        }
-
-        protected override float Width
-        {
-            get { return m_Drawer.Width; }
-        }
-
-        protected override float Height
-        {
-            get { return m_Drawer.Height; }
+            get { return m_Drawer.Recttangle; }
         }
 
         private EWMsgBoxCustomDrawer m_Drawer;

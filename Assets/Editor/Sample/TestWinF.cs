@@ -2,13 +2,14 @@
 using UnityEditor;
 using System.Collections;
 using System;
+using EditorWinEx.Internal;
 
 /// <summary>
 /// SubWindow自定义消息弹框范例
 /// </summary>
 public class TestWinF : MDIEditorWindow {
 
-    [MenuItem("Test/TestWinF")]
+    [MenuItem("SubWindow范例/6.自定义消息弹框范例")]
     static void Init()
     {
         TestWinF win = TestWinA.CreateWindow<TestWinF>();
@@ -30,25 +31,12 @@ public class TestWinF : MDIEditorWindow {
 [EWMsgBoxHandle(typeof(TestWinF), 2)]
 class TestMsgDrawer : EWMsgBoxCustomDrawer
 {
-    public override float Height
+    public override EWRectangle Recttangle
     {
-        get { return 0.6f; }
+        get { return m_RectTangle; }
     }
 
-    public override float Width
-    {
-        get { return 0.6f; }
-    }
-
-    public override float X
-    {
-        get { return 0.2f; }
-    }
-
-    public override float Y
-    {
-        get { return 0.2f; }
-    }
+    private EWRectangle m_RectTangle = new EWRectangle(0.2f, 0.2f, 0.6f, 0.6f);
 
     public override void DrawMsgBox(Rect rect, object obj)
     {
@@ -57,7 +45,7 @@ class TestMsgDrawer : EWMsgBoxCustomDrawer
         if (GUI.Button(new Rect(rect.x + rect.width - 21, rect.y + 4, 13, 11), string.Empty, GUIStyleCache.GetStyle("WinBtnClose")))
         {
             CloseMsgBox();
-        }
+        } 
         GUI.Label(new Rect(rect.x, rect.y + 30, rect.width, 20), "XXXXXXXXXXXXXX");
     }
 

@@ -7,7 +7,7 @@ using System.Collections;
 /// </summary>
 public class TestWinC : MDIEditorWindow {
 
-    [MenuItem("Test/TestWinC")]
+    [MenuItem("SubWindow范例/3.工具栏和帮助栏范例")]
     static void Init()
     {
         TestWinC win = TestWinA.CreateWindow<TestWinC>();
