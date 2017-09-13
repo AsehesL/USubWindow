@@ -105,9 +105,9 @@ public class GridSubWindow : SubWindow
             m_SceneViewPosition.x = rect.width - tileCountX * 2 * kTileSize;
         if (m_SceneViewPosition.x > tileCountX * kTileSize)
             m_SceneViewPosition.x = tileCountX * kTileSize;
-        if (m_SceneViewPosition.y < rect.height - tileCountY * 2 * kTileSize - 20)
-            m_SceneViewPosition.y = rect.height - tileCountY * 2 * kTileSize - 20;
-        if (m_SceneViewPosition.y > tileCountY * kTileSize - 20)
-            m_SceneViewPosition.y = tileCountY * kTileSize - 20;
+        if (m_SceneViewPosition.y < rect.height - tileCountY * 2 * kTileSize)
+            m_SceneViewPosition.y = rect.height - tileCountY * 2 * kTileSize;
+        if (m_SceneViewPosition.y > tileCountY * kTileSize)
+            m_SceneViewPosition.y = tileCountY * kTileSize;
     }
 }
