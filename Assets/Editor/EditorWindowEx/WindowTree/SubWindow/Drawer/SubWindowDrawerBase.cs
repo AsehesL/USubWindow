@@ -16,8 +16,6 @@ namespace EditorWinEx.Internal
         /// </summary>
         public abstract GUIContent Title { get; }
 
-        public abstract string Id { get; }
-
         protected abstract EWSubWindowToolbarType toolBar { get; }
 
         /// <summary>
@@ -26,6 +24,8 @@ namespace EditorWinEx.Internal
         protected abstract SubWindowHelpBox helpBox { get; }
 
         public virtual void DrawLeafToolBar(Rect rect) { }
+
+        public abstract string GetID(bool dynamic);
 
         public Rect DrawToolBar(ref Rect rect)
         {

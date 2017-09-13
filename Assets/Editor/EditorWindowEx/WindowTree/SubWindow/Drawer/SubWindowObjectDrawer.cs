@@ -12,11 +12,6 @@ namespace EditorWinEx.Internal
             get { return m_ObjDrawer.helpBox; }
         }
 
-        public override string Id
-        {
-            get { return m_Id; }
-        }
-
         public override GUIContent Title
         {
             get { return m_ObjDrawer.Title; }
@@ -29,30 +24,45 @@ namespace EditorWinEx.Internal
 
         private SubWindowCustomDrawer m_ObjDrawer;
 
-        private string m_Id;
-
         private bool m_IsLock = false;
 
         public SubWindowObjectDrawer(SubWindowCustomDrawer drawer)
         {
             this.m_ObjDrawer = drawer;
-            this.m_Id = GetDrawerID(drawer);
         }
 
-        internal static string GetDrawerID(SubWindowCustomDrawer drawer)
+        internal static string GetDrawerID(SubWindowCustomDrawer drawer, bool dynamic)
         {
+            string result = null;
             if (drawer == null)
-                return null;
-            return "__CLASS__" + drawer.GetType().FullName;
+                return result;
+            result = "__CLASS__" + drawer.GetType().FullName;
+            if (dynamic)
+                if (drawer.Title != null && !string.IsNullOrEmpty(drawer.Title.text))
+                    result += "." + drawer.GetHashCode();
+                else
+                    result += ".UnKnown";
+            return result;
         }
 
-        internal static string GetDrawerIDByType(Type type)
+        internal static string GetDrawerIDByType(Type type, string title, bool dynamic)
         {
+            string result = null;
             if (type == null)
                 return null;
             if(type.IsSubclassOf(typeof(SubWindowCustomDrawer)))
-                return "__CLASS__" + type.FullName;
-            return null;
+                result = "__CLASS__" + type.FullName;
+            if(dynamic)
+                if (!string.IsNullOrEmpty(title))
+                    result += "." + title;
+                else
+                    result += ".UnKnownTitle";
+            return result;
+        }
+
+        public override string GetID(bool dynamic)
+        {
+            return GetDrawerID(m_ObjDrawer, dynamic);
         }
 
         public override void DrawWindow(Rect mainRect, Rect toolbarRect, Rect helpboxRect)

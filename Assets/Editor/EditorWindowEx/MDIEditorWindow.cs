@@ -220,18 +220,13 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     /// 添加动态窗口
     /// </summary>
     /// <param name="drawer"></param>
-    public void AddDynamicSubWindow(SubWindowCustomDrawer drawer)
+    public void AddDynamicSubWindow<T>(T drawer) where T : SubWindowCustomDrawer
     {
         if (drawer == null)
             return;
         if (m_WindowTree != null)
         {
-            string id = drawer.GetType().FullName;
-            if (this.m_WindowTree.ContainWindowID(id))
-                return;
-            SubWindow window = new SubWindow(true, drawer);
-            window.isDynamic = true;
-            this.m_WindowTree.AddWindow(window);
+            this.m_WindowTree.AddDynamicWindow(drawer);
         }
     }
 
@@ -262,21 +257,12 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         this.RemoveDynamicSubWindowInternal(action);
     }
 
-    public bool RemoveDynamicSubWindow(SubWindowCustomDrawer drawer)
+    public bool RemoveDynamicSubWindow<T>(T drawer)where T : SubWindowCustomDrawer
     {
         if (drawer == null)
             return false;
         if (m_WindowTree != null)
-            return m_WindowTree.RemoveWindow(drawer);
-        return false;
-    }
-
-    public bool RemoveDynamicSubWindow(Type drawerType)
-    {
-        if (drawerType == null)
-            return false;
-        if (m_WindowTree != null)
-            return m_WindowTree.RemoveWindow(drawerType);
+            return m_WindowTree.RemoveDynamicWindow(drawer);
         return false;
     }
 
@@ -447,12 +433,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     {
         if (m_WindowTree != null)
         {
-            string id = action.Target.GetType().FullName + "." + action.Method.Name;
-            if (m_WindowTree.ContainWindowID(id))
-                return;
-            SubWindow window = new SubWindow(title, icon, true, action.Method, action.Target, toolbar, helpbox);
-            window.isDynamic = true;
-            this.m_WindowTree.AddWindow(window);
+            this.m_WindowTree.AddDynamicWindow(title, icon, toolbar, helpbox, action);
         }
     }
 
@@ -460,7 +441,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     {
         if (m_WindowTree != null)
         {
-            return m_WindowTree.RemoveWindow(action);
+            return m_WindowTree.RemoveDynamicWindow(action);
         }
         return false;
     }

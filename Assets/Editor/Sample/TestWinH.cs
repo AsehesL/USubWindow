@@ -2,12 +2,16 @@
 using UnityEditor;
 using System.Collections;
 using System;
+using UnityEngine.AI;
 
 /// <summary>
 /// SubWindow动态窗口范例
 /// </summary>
 public class TestWinH : MDIEditorWindow
 {
+    private DynamicWin m_DynamicWin1;
+    private DynamicWin m_DynamicWin2;
+
 
     [MenuItem("SubWindow范例/8.动态窗口范例")]
     static void InitWin()
@@ -53,14 +57,33 @@ public class TestWinH : MDIEditorWindow
     [EWToolBar("工具/创建动态窗口C")]
     private void Test5()
     {
-        AddDynamicSubWindow(new DynamicWin("动态窗口C"));
+        if (m_DynamicWin1 == null)
+            m_DynamicWin1 = new DynamicWin("动态窗口C", "XXXXXXX");
+        AddDynamicSubWindow(m_DynamicWin1);
     }
 
 
     [EWToolBar("工具/移除动态窗口C")]
     private void Test6()
     {
-        RemoveDynamicSubWindow(typeof(DynamicWin));
+        if (m_DynamicWin1 != null)
+            RemoveDynamicSubWindow<DynamicWin>(m_DynamicWin1);
+    }
+
+    [EWToolBar("工具/创建动态窗口D")]
+    private void Test7()
+    {
+        if (m_DynamicWin2 == null)
+            m_DynamicWin2 = new DynamicWin("动态窗口D", "YYYYYYY");
+        AddDynamicSubWindow(m_DynamicWin2);
+    }
+
+
+    [EWToolBar("工具/移除动态窗口D")]
+    private void Test8()
+    {
+        if (m_DynamicWin2 != null)
+            RemoveDynamicSubWindow<DynamicWin>(m_DynamicWin2);
     }
 
     private class DynamicWin : SubWindowCustomDrawer
@@ -77,9 +100,21 @@ public class TestWinH : MDIEditorWindow
 
         private GUIContent m_Title;
 
-        public DynamicWin(string title)
+        private string m_Arg;
+
+        public DynamicWin(string title, string arg)
         {
             m_Title = new GUIContent(title);
+            if (arg == null)
+                m_Arg = "Null";
+            else
+                m_Arg = arg;
+        }
+
+        public override void DrawMainWindow(Rect mainRect)
+        {
+            base.DrawMainWindow(mainRect);
+            GUI.Label(mainRect, "Arg:" + m_Arg);
         }
     }
 }

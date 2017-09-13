@@ -121,20 +121,32 @@ namespace EditorWinEx.Internal
             DestroyAllWindow();
         }
 
-        /// <summary>
-        /// 添加子窗口
-        /// </summary>
-        /// <param name="window">子窗口</param>
-        public void AddWindow(SubWindow window)
+        public void AddDynamicWindow(string title, string icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
+        Delegate method)
         {
+            if (method == null)
+                return;
+            string id = SubWindowMethodDrawer.GetMethodID(method.Method, method.Target);
+            SubWindow window = new SubWindow(title, icon, true, method.Method, method.Target, toolbar, helpbox);
+            window.isDynamic = true;
             m_SubWindowList.Add(window);
-            {
-                window.Open();
-                this.InsertWindow(window);
-            }
+            window.Open();
+            this.InsertWindow(window);
         }
 
-        public bool RemoveWindow(Delegate method)
+        public void AddDynamicWindow<T>(T drawer) where T : SubWindowCustomDrawer
+        {
+            if (drawer == null)
+                return;
+            string id = SubWindowObjectDrawer.GetDrawerID(drawer, true);
+            SubWindow window = new SubWindow(true, drawer);
+            window.isDynamic = true;
+            m_SubWindowList.Add(window);
+            window.Open();
+            this.InsertWindow(window);
+        }
+
+        public bool RemoveDynamicWindow(Delegate method)
         {
             string id = null;
             if (method == null)
@@ -144,19 +156,13 @@ namespace EditorWinEx.Internal
             return RemoveWindowByID(id);
         }
 
-        public bool RemoveWindow(SubWindowCustomDrawer drawer)
+        public bool RemoveDynamicWindow<T>(T drawer) where T : SubWindowCustomDrawer
         {
             string id = null;
             if (drawer == null)
-                id = SubWindowObjectDrawer.GetDrawerID(null);
+                id = SubWindowObjectDrawer.GetDrawerID(null, true);
             else
-                id = SubWindowObjectDrawer.GetDrawerID(drawer);
-            return RemoveWindowByID(id);
-        }
-
-        public bool RemoveWindow(Type drawerType)
-        {
-            string id = SubWindowObjectDrawer.GetDrawerIDByType(drawerType);
+                id = SubWindowObjectDrawer.GetDrawerID(drawer, true);
             return RemoveWindowByID(id);
         }
 

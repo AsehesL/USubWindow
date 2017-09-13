@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Reflection;
 using UnityEditor;
+using System;
 
 namespace EditorWinEx.Internal
 {
@@ -10,11 +11,6 @@ namespace EditorWinEx.Internal
         protected override SubWindowHelpBox helpBox
         {
             get { return m_HelpBox; }
-        }
-
-        public override string Id
-        {
-            get { return m_ID; }
         }
 
         public override GUIContent Title
@@ -47,23 +43,25 @@ namespace EditorWinEx.Internal
 
         private EWSubWindowToolbarType m_ToolBar;
 
-        private string m_ID;
-
         /// <summary>
         /// 帮助栏
         /// </summary>
         private SubWindowHelpBox m_HelpBox = null;
 
+        private string m_Id;
+
         internal static string GetMethodID(MethodInfo method, System.Object target)
         {
+            string result = null;
             if (target == null && method == null)
-                return "__METHOD__UnKnownClass.UnKnownMethod";
+                result= "__METHOD__UnKnownClass.UnKnownMethod";
             else if (target == null)
-                return "__METHOD__UnKnownClass." + method.Name;
+                result= "__METHOD__UnKnownClass." + method.Name;
             else if (method == null)
-                return "__METHOD__" + target.GetType().FullName + ".UnKnownMethod";
+                result= "__METHOD__" + target.GetType().FullName + ".UnKnownMethod";
             else
-                return "__METHOD__" + target.GetType().FullName + "." + method.Name;
+                result= "__METHOD__" + target.GetType().FullName + "." + method.Name;
+            return result;
         }
 
         public SubWindowMethodDrawer(string title, string icon, MethodInfo method, System.Object target,
@@ -74,12 +72,17 @@ namespace EditorWinEx.Internal
             this.m_ToolBar = toolbar;
             this.m_HelpBox = SubWindowHelpBox.CreateHelpBox(helpbox);
             this.m_Target = target;
-            this.m_ID = GetMethodID(method, target);
+            this.m_Id = GetMethodID(method, target);
             if (this.m_Method != null)
             {
                 ParameterInfo[] p = this.m_Method.GetParameters();
                 m_Params = new System.Object[p.Length];
             }
+        }
+
+        public override string GetID(bool dynamic)
+        {
+            return m_Id;
         }
 
         protected override bool OnInit()

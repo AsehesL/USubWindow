@@ -13,6 +13,7 @@ using EditorWinEx.Internal;
 [SubWindowStyle(SubWindowStyle.Default)]
 public class SubWindow
 {
+
     /// <summary>
     /// 标题
     /// </summary>
@@ -59,7 +60,7 @@ public class SubWindow
     public string GetIndentifier()
     {
         if (m_Drawer != null)
-            return m_Drawer.Id;
+            return m_Drawer.GetID(isDynamic);
         return "Unknown.UnknownId";
     }
 
