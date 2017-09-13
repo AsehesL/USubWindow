@@ -31,7 +31,8 @@ namespace EditorWinEx.Internal
         void OnWizardCreate()
         {
             if (layoutname == "Default")
-                return;
+                if (!EditorUtility.DisplayDialog("警告", "确定覆盖默认布局?", "是", "否"))
+                    return;
             if (m_Layout != null)
                 m_Layout.SaveLayout(layoutname, m_TreeId, m_RootNode);
             m_Layout = null;

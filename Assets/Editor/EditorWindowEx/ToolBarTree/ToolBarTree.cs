@@ -54,6 +54,14 @@ public class ToolBarTree : EditorWindowComponentBase
         m_Root.InsertNode(text, method, target, null, null, priority);
     }
 
+    /// <summary>
+    /// 插入菜单项
+    /// </summary>
+    /// <param name="text">菜单项</param>
+    /// <param name="method">菜单响应方法</param>
+    /// <param name="priority">优先级</param>
+    /// <param name="condition">条件委托</param>
+    /// <param name="obj"></param>
     public void InsertItem(string text, Delegate method, int priority, ConditionDelegate condition, System.Object obj)
     {
         if (method == null)

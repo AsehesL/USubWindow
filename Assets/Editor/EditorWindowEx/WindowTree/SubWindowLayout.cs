@@ -52,7 +52,8 @@ namespace EditorWinEx.Internal
             {
                 node.WriteToLayoutCfg(root, doc, 0);
             }
-            string path = GetLayoutCfgsPath();
+            bool isCurrent = layoutName == "Current";
+            string path = GetLayoutCfgsPath(isCurrent);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             doc.Save(path + "/" + layoutName + ".xml");
@@ -71,7 +72,8 @@ namespace EditorWinEx.Internal
                 return null;
             if (string.IsNullOrEmpty(treeId))
                 return null;
-            string path = Path.Combine(GetLayoutCfgsPath(), layoutName + ".xml");
+            bool isCurrent = layoutName == "Current";
+            string path = Path.Combine(GetLayoutCfgsPath(isCurrent), layoutName + ".xml");
             if (File.Exists(path))
             {
                 XmlDocument doc = new XmlDocument();
@@ -131,7 +133,7 @@ namespace EditorWinEx.Internal
         {
             if (m_Layouts != null && m_Layouts.Contains(layoutName))
             {
-                string path = GetLayoutCfgsPath() + "/" + layoutName + ".xml";
+                string path = GetLayoutCfgsPath(false) + "/" + layoutName + ".xml";
                 if (File.Exists(path))
                 {
                     File.Delete(path);
@@ -143,7 +145,7 @@ namespace EditorWinEx.Internal
 
         private void LoadLayoutCfgs()
         {
-            string path = GetLayoutCfgsPath();
+            string path = GetLayoutCfgsPath(false);
             if (Directory.Exists(path))
             {
                 m_Layouts.Clear();
@@ -161,12 +163,15 @@ namespace EditorWinEx.Internal
             }
         }
 
-        private string GetLayoutCfgsPath()
+        private string GetLayoutCfgsPath(bool isCurrent)
         {
             string rootPath = "SubWindowTree/" + Application.identifier + "/" + m_WindowName;
             if (!string.IsNullOrEmpty(m_HandleName))
                 rootPath = rootPath + "/" + m_HandleName;
-            return Path.Combine(Application.temporaryCachePath, rootPath);
+            if (isCurrent)
+                return Path.Combine(Application.temporaryCachePath, rootPath);
+            else
+                return rootPath;
         }
     }
 }

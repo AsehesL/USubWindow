@@ -109,7 +109,7 @@ namespace EditorWinEx.Internal
         protected override void OnInit()
         {
             base.OnInit();
-            if (!UseLayout("Default"))
+            if (!UseLayout("Current"))
                 UseDefaultLayout();
         }
 
@@ -303,13 +303,17 @@ namespace EditorWinEx.Internal
         {
             if (GUI.Button(rect, "Layout", GUIStyleCache.GetStyle("ToolbarDropDown")))
             {
-                if (m_Layout != null && m_Layout.Layouts != null && m_Layout.Layouts.Count > 0)
+                if (m_Layout != null)
                 {
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Default"), false, this.UseDefaultLayout);
-                    for (int i = 0; i < m_Layout.Layouts.Count; i++)
+                    if (m_Layout.Layouts != null && m_Layout.Layouts.Count > 0)
                     {
-                        menu.AddItem(new GUIContent(m_Layout.Layouts[i]), false, this.OnUseLayout, m_Layout.Layouts[i]);
+                        for (int i = 0; i < m_Layout.Layouts.Count; i++)
+                        {
+                            menu.AddItem(new GUIContent(m_Layout.Layouts[i]), false, this.OnUseLayout,
+                                m_Layout.Layouts[i]);
+                        }
                     }
                     menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Save Layout..."), false, this.OnSaveLayout);
@@ -322,7 +326,7 @@ namespace EditorWinEx.Internal
 
         public void SaveCurrentLayout()
         {
-            SaveLayoutCfgs("Default");
+            SaveLayoutCfgs("Current");
         }
 
         /// <summary>
@@ -494,18 +498,21 @@ namespace EditorWinEx.Internal
         /// </summary>
         private void UseDefaultLayout()
         {
-            List<SubWindow> alreadyOpen = new List<SubWindow>();
-            for (int i = 0; i < m_SubWindowList.Count; i++)
+            if (!UseLayout("Default"))
             {
-                if (m_SubWindowList[i].DefaultOpen)
+                List<SubWindow> alreadyOpen = new List<SubWindow>();
+                for (int i = 0; i < m_SubWindowList.Count; i++)
                 {
-                    alreadyOpen.Add(m_SubWindowList[i]);
-                    m_SubWindowList[i].Close();
+                    if (m_SubWindowList[i].DefaultOpen)
+                    {
+                        alreadyOpen.Add(m_SubWindowList[i]);
+                        m_SubWindowList[i].Close();
+                    }
                 }
-            }
-            for (int i = 0; i < alreadyOpen.Count; i++)
-            {
-                this.InsertWindow(alreadyOpen[i]);
+                for (int i = 0; i < alreadyOpen.Count; i++)
+                {
+                    this.InsertWindow(alreadyOpen[i]);
+                }
             }
         }
 
