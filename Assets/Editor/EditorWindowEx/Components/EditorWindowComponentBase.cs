@@ -62,6 +62,13 @@ namespace EditorWinEx
             IsInitialized = false;
         }
 
+        public void Disable()
+        {
+            if (!IsInitialized)
+                return;
+            OnDisable();
+        }
+
         protected abstract void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target);
 
         protected abstract void OnRegisterClass(System.Object container, Type type);
@@ -73,5 +80,7 @@ namespace EditorWinEx
         protected virtual void OnDestroy()
         {
         }
+
+        protected virtual void OnDisable() { }
     }
 }

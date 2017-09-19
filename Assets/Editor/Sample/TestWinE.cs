@@ -33,12 +33,18 @@ public class TestWinE : MDIEditorWindow {
 }
 
 [EWSubWindowHandle(typeof(TestWinE))]
+[System.Serializable]
 class TestDrawerForTestWinE : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
     {
-        get { return m_Title; }
+        get
+        {
+            if (m_Title == null)
+                m_Title = new GUIContent("DefaultTitle");
+            return m_Title;
+        }
     }
 
     public override EWSubWindowToolbarType toolBar
@@ -48,11 +54,15 @@ class TestDrawerForTestWinE : SubWindowCustomDrawer
 
     private EWSubWindowToolbarType m_ToolBar = EWSubWindowToolbarType.None;
 
+    [NonSerialized]
     private GUIContent m_Title;
+
+    public string valueA = "xxx";
+
+    public Vector3 valueB = Vector3.zero;
 
     public TestDrawerForTestWinE()
     {
-        m_Title = new GUIContent("DefaultTitle");
     }
 
     public override void DrawMainWindow(Rect mainRect)
@@ -82,6 +92,8 @@ class TestDrawerForTestWinE : SubWindowCustomDrawer
         {
             ((TestWinE) container).TestFunc();
         }
+        valueA = EditorGUI.TextField(new Rect(mainRect.x, mainRect.y + 120, mainRect.width, 20), "Value:", valueA);
+        valueB = EditorGUI.Vector3Field(new Rect(mainRect.x, mainRect.y + 140, mainRect.width, 20), "ValueB:", valueB);
     }
 
     public override void Init()
@@ -111,11 +123,17 @@ class TestDrawerForTestWinE : SubWindowCustomDrawer
 }
 
 [EWSubWindowHandle(typeof(TestWinE))]
+[System.Serializable]
 class TestDrawerForTestWinE2 : SubWindowCustomDrawer, ISubWinCustomMenu, ISubWinLock
 {
     public override GUIContent Title
     {
-        get { return m_Title; }
+        get
+        {
+            if (m_Title == null)
+                m_Title = new GUIContent("DefaultTitle2");
+            return m_Title;
+        }
     }
 
     public override EWSubWindowToolbarType toolBar
@@ -123,11 +141,11 @@ class TestDrawerForTestWinE2 : SubWindowCustomDrawer, ISubWinCustomMenu, ISubWin
         get { return EWSubWindowToolbarType.None; }
     }
 
+    [NonSerialized]
     private GUIContent m_Title;
 
     public TestDrawerForTestWinE2()
     {
-        m_Title = new GUIContent("DefaultTitle2");
     }
 
     public void SetLockActive(bool isLockActive)

@@ -127,6 +127,11 @@ public class SubWindow
         m_Drawer.Destroy();
     }
 
+    public void SerializeSubWindow()
+    {
+        m_Drawer.Serialize(isDynamic);
+    }
+
     protected virtual Rect DrawMainArea(Rect rect)
     {
         return rect;

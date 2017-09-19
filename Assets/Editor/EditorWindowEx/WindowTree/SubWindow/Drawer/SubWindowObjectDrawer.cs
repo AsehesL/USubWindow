@@ -29,6 +29,17 @@ namespace EditorWinEx.Internal
         public SubWindowObjectDrawer(SubWindowCustomDrawer drawer)
         {
             this.m_ObjDrawer = drawer;
+            string id = GetID(false);
+            if (EditorPrefsEx.HasKey(id))
+            {
+                var obj = EditorPrefsEx.GetObject(id, drawer.GetType());
+                if (obj != null)
+                {
+                    drawer = (SubWindowCustomDrawer)obj;
+                    drawer.SetContainer(this.m_ObjDrawer.Container);
+                    this.m_ObjDrawer = drawer;
+                }
+            }
         }
 
         internal static string GetDrawerID(SubWindowCustomDrawer drawer, bool dynamic)
@@ -112,6 +123,9 @@ namespace EditorWinEx.Internal
         {
             base.OnDestroy();
             m_ObjDrawer.OnDestroy();
+            string id = GetID(false);
+            if (EditorPrefsEx.HasKey(id))
+                EditorPrefsEx.DeleteKey(id);
         }
 
         protected override void OnEnable()
@@ -124,6 +138,16 @@ namespace EditorWinEx.Internal
         {
             m_ObjDrawer.Init();
             return true;
+        }
+
+        protected override void OnSerialize(bool dynamic)
+        {
+            base.OnSerialize(dynamic);
+            if (!dynamic)
+            {
+                string id = GetID(false);
+                EditorPrefsEx.SetObject(id, m_ObjDrawer);
+            }
         }
     }
 }

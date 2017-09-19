@@ -5,6 +5,7 @@ using System;
 /// <summary>
 /// SubWindow自定义绘制器
 /// </summary>
+[System.Serializable]
 public abstract class SubWindowCustomDrawer : CustomEWComponentDrawerBase
 {
 
@@ -12,6 +13,12 @@ public abstract class SubWindowCustomDrawer : CustomEWComponentDrawerBase
     {
         get { return m_HelpBox; }
     }
+
+    [NonSerialized]
+    private SubWindowHelpBox m_HelpBox;
+
+    [NonSerialized]
+    private SubWindowHelpBoxType m_HelpBoxType;
 
     public void SetSubWindowHelpBoxType(SubWindowHelpBoxType helpBoxType)
     {
@@ -46,8 +53,4 @@ public abstract class SubWindowCustomDrawer : CustomEWComponentDrawerBase
     public virtual void DrawToolBar(Rect toolbar) { }
 
     public virtual void DrawHelpBox(Rect helpBox) { }
-
-    private SubWindowHelpBox m_HelpBox;
-
-    private SubWindowHelpBoxType m_HelpBoxType;
 }

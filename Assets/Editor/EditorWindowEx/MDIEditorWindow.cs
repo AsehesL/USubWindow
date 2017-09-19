@@ -290,6 +290,18 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
 
     protected virtual void OnDisable()
     {
+        if (m_WindowTree != null)
+        {
+            m_WindowTree.Disable();
+        }
+        if (m_ToolbarTree != null)
+        {
+            m_ToolbarTree.Disable();
+        }
+        if (m_MsgBox != null)
+        {
+            m_MsgBox.Disable();
+        }
     }
 
     protected virtual void OnDestroy()

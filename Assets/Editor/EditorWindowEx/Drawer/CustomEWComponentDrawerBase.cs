@@ -7,11 +7,14 @@ using System;
 /// <summary>
 /// 自定义组件绘制器
 /// </summary>
+[System.Serializable]
 public abstract class CustomEWComponentDrawerBase : IMessageDispatcher
 {
+    public System.Object Container { get { return container; } }
     /// <summary>
     /// 组件容器
     /// </summary>
+    [NonSerialized]
     protected System.Object container;
 
     /// <summary>

@@ -121,6 +121,12 @@ namespace EditorWinEx.Internal
             DestroyAllWindow();
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            SerializeAllWindow();
+        }
+
         public void AddDynamicWindow(string title, string icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
         Delegate method)
         {
@@ -164,6 +170,14 @@ namespace EditorWinEx.Internal
             else
                 id = SubWindowObjectDrawer.GetDrawerID(drawer, true);
             return RemoveWindowByID(id);
+        }
+
+        private void SerializeAllWindow()
+        {
+            foreach (var win in m_SubWindowList)
+            {
+                win.SerializeSubWindow();
+            }
         }
 
         /// <summary>

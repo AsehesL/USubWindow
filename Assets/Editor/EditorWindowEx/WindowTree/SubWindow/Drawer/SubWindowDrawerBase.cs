@@ -56,6 +56,12 @@ namespace EditorWinEx.Internal
             return new Rect(rect.x, rect.y, 0, 0);
         }
 
+        public void Serialize(bool dynamic)
+        {
+            if (IsInitialized)
+                OnSerialize(dynamic);
+        }
+
         protected override void OnDestroy()
         {
         }
@@ -67,6 +73,8 @@ namespace EditorWinEx.Internal
         protected override void OnDisable()
         {
         }
+
+        protected virtual void OnSerialize(bool dynamic) { }
 
         public abstract void DrawWindow(Rect mainRect, Rect toolbarRect, Rect helpboxRect);
 
