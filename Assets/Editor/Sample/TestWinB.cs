@@ -10,7 +10,7 @@ public class TestWinB : MDIEditorWindow {
     [MenuItem("SubWindow范例/2.样式范例")]
     static void InitWin()
     {
-        TestWinB win = TestWinA.CreateWindow<TestWinB>();
+        TestWinA.CreateWindow<TestWinB>();
     }
 
     [EWSubWindow("Grid", EWSubWindowIcon.Game, true, SubWindowStyle.Grid)]

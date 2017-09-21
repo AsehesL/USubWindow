@@ -18,7 +18,7 @@ public class TestWinG : MDIEditorWindow {
     [MenuItem("SubWindow范例/7.自定义窗体、主窗体间的消息通信范例")]
     static void InitWin()
     {
-        TestWinG win = TestWinA.CreateWindow<TestWinG>();
+        TestWinA.CreateWindow<TestWinG>();
     }
 
     protected override void OnEnable()

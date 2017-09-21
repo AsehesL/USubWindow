@@ -21,7 +21,16 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     /// <summary>
     /// 进行绘制的handle对象（可以是任何能通过构造函数构造的类型）
     /// </summary>
-    protected System.Object handle;
+    protected System.Object Handle
+    {
+        get
+        {
+            if (m_Handle == null)
+                return null;
+            return m_Handle.Handle;
+        }
+    }
+
     /// <summary>
     /// 窗口树
     /// </summary>
@@ -37,6 +46,9 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
 
     private bool m_IsInitialized;
 
+    [SerializeField]
+    private WindowHandleObject m_Handle;
+
     /// <summary>
     /// 窗口创建方法
     /// </summary>
@@ -46,7 +58,10 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     public static T CreateWindow<T>(System.Object handle = null) where T : MDIEditorWindow
     {
         T window = MDIEditorWindow.GetWindow<T>();
-        window.handle = handle;
+        if (handle != null)
+            window.m_Handle = WindowHandleObject.CreateInstance(handle);
+        else
+            window.m_Handle = null;
         window.Clear();
         window.Init();
         window.m_IsInitialized = true;
@@ -302,6 +317,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         {
             m_MsgBox.Disable();
         }
+        SaveHandle();
     }
 
     protected virtual void OnDestroy()
@@ -321,6 +337,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
             m_MsgBox.Destroy();
             m_MsgBox = null;
         }
+        ClearHandle();
     }
 
     protected virtual void Clear()
@@ -344,10 +361,11 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
 
     protected virtual void Init()
     {
+        LoadHandle();
         if (m_WindowTree == null)
         {
-            if (handle != null)
-                m_WindowTree = new SubWindowTree(Repaint, GetType().Name, handle.GetType().Name);
+            if (Handle != null)
+                m_WindowTree = new SubWindowTree(Repaint, GetType().Name, Handle.GetType().Name);
             else
                 m_WindowTree = new SubWindowTree(Repaint, GetType().Name, null);
         }
@@ -361,10 +379,10 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         }
         Type[] handleTypes = null;
         System.Object[] handles = null;
-        if (handle != null)
+        if (Handle != null)
         {
-            handleTypes = new Type[] {handle.GetType(), GetType()};
-            handles = new object[] {handle, this};
+            handleTypes = new Type[] {Handle.GetType(), GetType()};
+            handles = new object[] {Handle, this};
         }
         else
         {
@@ -461,5 +479,29 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     public Type GetContainerType()
     {
         return GetType();
+    }
+
+    private void SaveHandle()
+    {
+        if (this.m_Handle == null)
+            return;
+        string id = GetType().FullName;
+        this.m_Handle.SaveHandle(id);
+    }
+
+    private void LoadHandle()
+    {
+        if (this.m_Handle == null)
+            return;
+        string id = GetType().FullName;
+        this.m_Handle.LoadHandle(id);
+    }
+
+    private void ClearHandle()
+    {
+        if (this.m_Handle == null)
+            return;
+        string id = GetType().FullName;
+        this.m_Handle.ClearHandle(id);
     }
 }

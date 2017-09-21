@@ -12,7 +12,7 @@ public class TestWinF : MDIEditorWindow {
     [MenuItem("SubWindow范例/6.自定义消息弹框范例")]
     static void InitWin()
     {
-        TestWinF win = TestWinA.CreateWindow<TestWinF>();
+        TestWinA.CreateWindow<TestWinF>();
     }
 
     [EWSubWindow("SunWinA", EWSubWindowIcon.Game)]

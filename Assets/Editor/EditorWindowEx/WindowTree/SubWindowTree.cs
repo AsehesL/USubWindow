@@ -133,6 +133,8 @@ namespace EditorWinEx.Internal
             if (method == null)
                 return;
             string id = SubWindowMethodDrawer.GetMethodID(method.Method, method.Target);
+            if (ContainWindowID(id))
+                return;
             SubWindow window = new SubWindow(title, icon, true, method.Method, method.Target, toolbar, helpbox);
             window.isDynamic = true;
             m_SubWindowList.Add(window);
@@ -145,6 +147,8 @@ namespace EditorWinEx.Internal
             if (drawer == null)
                 return;
             string id = SubWindowObjectDrawer.GetDrawerID(drawer, true);
+            if (ContainWindowID(id))
+                return;
             SubWindow window = new SubWindow(true, drawer);
             window.isDynamic = true;
             m_SubWindowList.Add(window);
@@ -190,23 +194,20 @@ namespace EditorWinEx.Internal
                 return false;
             if (this.m_SubWindowList != null)
             {
-                for (int i = 0; i < m_SubWindowList.Count; i++)
+                var win = GetWindowByID(windowId);
+                if (win != null)
                 {
-                    if (this.m_SubWindowList[i].GetIndentifier() == windowId)
+                    if (win.IsOpen)
                     {
-                        var win = this.m_SubWindowList[i];
-                        if (win.IsOpen)
+                        if (this.m_Root != null)
                         {
-                            if (this.m_Root != null)
-                            {
-                                this.m_Root.RemoveWindow(win);
-                                this.m_Root.ClearEmptyNode();
-                                this.m_Root.Recalculate(0, true);
-                            }
+                            this.m_Root.RemoveWindow(win);
+                            this.m_Root.ClearEmptyNode();
+                            this.m_Root.Recalculate(0, true);
                         }
-                        this.m_SubWindowList.RemoveAt(i);
-                        return true;
                     }
+                    this.m_SubWindowList.Remove(win);
+                    return true;
                 }
             }
             return false;
@@ -264,17 +265,22 @@ namespace EditorWinEx.Internal
         /// 是否包含指定ID的窗口
         /// </summary>
         /// <param name="windowId"></param>
-        public bool ContainWindowID(string windowId)
+        private bool ContainWindowID(string windowId)
+        {
+            var win = GetWindowByID(windowId);
+            if (win != null)
+                return true;
+            return false;
+        }
+
+        private SubWindow GetWindowByID(string windowId)
         {
             if (this.m_SubWindowList != null)
             {
-                for (int i = 0; i < m_SubWindowList.Count; i++)
-                {
-                    if (this.m_SubWindowList[i].GetIndentifier() == windowId)
-                        return true;
-                }
+                var win = m_SubWindowList.Find(w => w.GetIndentifier() == windowId);
+                return win;
             }
-            return false;
+            return null;
         }
 
         /// <summary>

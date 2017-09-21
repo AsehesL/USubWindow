@@ -10,7 +10,7 @@ public class TestWinA : MDIEditorWindow {
     [MenuItem("SubWindow范例/1.基本范例")]
     static void InitWin()
     {
-        TestWinA win = TestWinA.CreateWindow<TestWinA>();
+        TestWinA.CreateWindow<TestWinA>();
     }
 
     [EWSubWindow("SunWinA", EWSubWindowIcon.Game)]

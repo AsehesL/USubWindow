@@ -16,7 +16,7 @@ public class TestWinH : MDIEditorWindow
     [MenuItem("SubWindow范例/8.动态窗口范例")]
     static void InitWin()
     {
-        TestWinH win = TestWinA.CreateWindow<TestWinH>();
+        TestWinA.CreateWindow<TestWinH>();
     }
     
     private void SubWinA(Rect main)
