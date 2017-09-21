@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using EditorWinEx;
 using EditorWinEx.Internal;
+using EditorWinEx.Internal.Serialization;
 
 public delegate void SubWindowAction(Rect rect);
 
@@ -27,7 +28,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         {
             if (m_Handle == null)
                 return null;
-            return m_Handle.Handle;
+            return m_Handle.Obj;
         }
     }
 
@@ -47,7 +48,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     private bool m_IsInitialized;
 
     [SerializeField]
-    private WindowHandleObject m_Handle;
+    private EWSerializationObject m_Handle;
 
     /// <summary>
     /// 窗口创建方法
@@ -59,7 +60,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
     {
         T window = MDIEditorWindow.GetWindow<T>();
         if (handle != null)
-            window.m_Handle = WindowHandleObject.CreateInstance(handle);
+            window.m_Handle = EWSerializationObject.CreateInstance(handle);
         else
             window.m_Handle = null;
         window.Clear();
@@ -486,7 +487,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         if (this.m_Handle == null)
             return;
         string id = GetType().FullName;
-        this.m_Handle.SaveHandle(id);
+        this.m_Handle.SaveObject(id);
     }
 
     private void LoadHandle()
@@ -494,7 +495,7 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         if (this.m_Handle == null)
             return;
         string id = GetType().FullName;
-        this.m_Handle.LoadHandle(id);
+        this.m_Handle.LoadObject(id);
     }
 
     private void ClearHandle()
@@ -502,6 +503,6 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         if (this.m_Handle == null)
             return;
         string id = GetType().FullName;
-        this.m_Handle.ClearHandle(id);
+        this.m_Handle.ClearObject(id);
     }
 }

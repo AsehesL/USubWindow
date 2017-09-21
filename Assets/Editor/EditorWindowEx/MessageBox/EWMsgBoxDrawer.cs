@@ -21,6 +21,12 @@ namespace EditorWinEx.Internal
             OnDrawMsgBox(main, obj);
         }
 
+        public virtual void Serialize()
+        {
+            if (IsInitialized)
+                OnSerialize();
+        }
+
         protected override void OnDestroy()
         {
         }
@@ -32,6 +38,8 @@ namespace EditorWinEx.Internal
         protected override void OnDisable()
         {
         }
+
+        protected virtual void OnSerialize() { }
 
         protected abstract void OnDrawMsgBox(Rect rect, System.Object obj);
     }

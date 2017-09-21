@@ -29,6 +29,7 @@ public class TestWinF : MDIEditorWindow {
 }
 
 [EWMsgBoxHandle(typeof(TestWinF), 2)]
+[Serializable]
 class TestMsgDrawer : EWMsgBoxCustomDrawer
 {
     public override EWRectangle Recttangle
@@ -36,7 +37,10 @@ class TestMsgDrawer : EWMsgBoxCustomDrawer
         get { return m_RectTangle; }
     }
 
+    [SerializeField]
     private EWRectangle m_RectTangle = new EWRectangle(0.2f, 0.2f, 0.6f, 0.6f);
+
+    [SerializeField] private Vector3 m_Value = Vector3.zero;
 
     public override void DrawMsgBox(Rect rect, object obj)
     {
@@ -47,6 +51,7 @@ class TestMsgDrawer : EWMsgBoxCustomDrawer
             CloseMsgBox();
         } 
         GUI.Label(new Rect(rect.x, rect.y + 30, rect.width, 20), "XXXXXXXXXXXXXX");
+        m_Value = EditorGUI.Vector3Field(new Rect(rect.x, rect.y + 50, rect.width, 20), "Value:", m_Value);
     }
 
     public override void Init()

@@ -147,4 +147,16 @@ public class EditorWindowMsgBox : EditorWindowComponentBase
             }
         }
     }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        foreach (var kvp in m_MsgBoxs)
+        {
+            if (kvp.Value != null)
+            {
+                kvp.Value.Serialize();
+            }
+        }
+    }
 }

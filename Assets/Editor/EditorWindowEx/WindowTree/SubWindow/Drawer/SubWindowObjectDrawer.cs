@@ -29,6 +29,8 @@ namespace EditorWinEx.Internal
         public SubWindowObjectDrawer(SubWindowCustomDrawer drawer)
         {
             this.m_ObjDrawer = drawer;
+            if (m_ObjDrawer == null)
+                return;
             string id = GetID(false);
             if (EditorPrefsEx.HasKey(id))
             {

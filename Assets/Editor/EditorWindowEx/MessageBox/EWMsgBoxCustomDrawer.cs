@@ -2,10 +2,12 @@
 using System.Collections;
 using System;
 using EditorWinEx.Internal;
+using UnityEngine.Events;
 
 /// <summary>
 /// 自定义MsgBox绘制器
 /// </summary>
+[Serializable]
 public abstract class EWMsgBoxCustomDrawer : CustomEWComponentDrawerBase
 {
 
