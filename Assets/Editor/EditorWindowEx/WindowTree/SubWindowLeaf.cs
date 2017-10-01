@@ -44,7 +44,15 @@ namespace EditorWinEx.Internal
                 window.Open();
                 m_SubWindows.Add(window);
             }
-            m_TweenParam = new GUITweenParam(true);
+            if (window == null)
+            {
+                m_TweenParam = new GUITweenParam(false);
+                m_TweenParam.tweenTime = 1;
+            }
+            else
+            {
+                m_TweenParam = new GUITweenParam(true);
+            }
         }
 
         public override void DrawGUI(Rect rect, System.Action repaintAction)
