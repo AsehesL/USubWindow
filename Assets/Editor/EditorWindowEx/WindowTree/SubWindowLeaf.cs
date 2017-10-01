@@ -41,10 +41,18 @@ namespace EditorWinEx.Internal
         {
             if (window != null)
             {
-                window.isOpen = true;
+                window.Open();
                 m_SubWindows.Add(window);
             }
-            m_TweenParam = new GUITweenParam(true);
+            if (window == null)
+            {
+                m_TweenParam = new GUITweenParam(false);
+                m_TweenParam.tweenTime = 1;
+            }
+            else
+            {
+                m_TweenParam = new GUITweenParam(true);
+            }
         }
 
         public override void DrawGUI(Rect rect, System.Action repaintAction)
@@ -89,12 +97,9 @@ namespace EditorWinEx.Internal
                     repaintAction();
             }
 
-            if (GUI.Button(new Rect(rect.width - 21, 4, 13, 11), string.Empty, GUIStyleCache.GetStyle("WinBtnClose")))
+            if (m_SelectSubWindow >= 0 && m_SelectSubWindow < m_SubWindows.Count)
             {
-                if (m_SelectSubWindow >= 0 && m_SelectSubWindow < m_SubWindows.Count)
-                {
-                    m_SubWindows[m_SelectSubWindow].Close();
-                }
+                m_SubWindows[m_SelectSubWindow].DrawToolBarExt(new Rect(rect.width - 100, 0, 100, 18));
             }
 
             GUI.EndGroup();
@@ -195,7 +200,7 @@ namespace EditorWinEx.Internal
                 var window = windowList.Find(w => w.GetIndentifier() == id);
                 if (window == null)
                     continue;
-                window.isOpen = true;
+                window.Open();
                 window.AddCloseEventListener(onWindowClose);
                 m_SubWindows.Add(window);
             }

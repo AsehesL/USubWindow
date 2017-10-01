@@ -12,7 +12,7 @@ namespace EditorWinEx.Internal
     /// <summary>
     /// 子窗体树
     /// </summary>
-    internal class SubWindowTree : EditorWindowTool
+    internal class SubWindowTree : EditorWindowComponentBase
     {
         /// <summary>
         /// 当前使用中的布局-null为默认布局
@@ -68,18 +68,18 @@ namespace EditorWinEx.Internal
 
         protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
         {
-            System.Object[] atts = method.GetCustomAttributes(typeof (SubWindowAttribute), false);
+            System.Object[] atts = method.GetCustomAttributes(typeof (EWSubWindowAttribute), false);
 
             for (int j = 0; j < atts.Length; j++)
             {
-                SubWindowAttribute att = (SubWindowAttribute) atts[j];
+                EWSubWindowAttribute att = (EWSubWindowAttribute) atts[j];
                 System.Object obj = SubWindowFactory.CreateSubWindow(att.windowStyle, att.title, att.iconPath,
                     att.active,
                     method, target, att.toolbar, att.helpBox);
 
                 if (obj != null)
                 {
-                    AddWindow((SubWindow) obj, false);
+                    m_SubWindowList.Add((SubWindow)obj);
                 }
             }
         }
@@ -88,20 +88,20 @@ namespace EditorWinEx.Internal
         {
             if (container == null)
                 return;
-            if (!type.IsSubclassOf(typeof (SubWindowCustomObjectDrawer)))
+            if (!type.IsSubclassOf(typeof (SubWindowCustomDrawer)))
                 return;
-            System.Object[] atts = type.GetCustomAttributes(typeof (SubWindowHandleAttribute), false);
+            System.Object[] atts = type.GetCustomAttributes(typeof (EWSubWindowHandleAttribute), false);
             for (int i = 0; i < atts.Length; i++)
             {
-                SubWindowHandleAttribute att = (SubWindowHandleAttribute) atts[i];
+                EWSubWindowHandleAttribute att = (EWSubWindowHandleAttribute) atts[i];
                 if (att == null)
                     continue;
-                if (att.targetWinType != container.GetType())
+                if (att.containerType != container.GetType())
                     continue;
                 System.Object obj = SubWindowFactory.CreateSubWindow(container, att.active, att.windowStyle, type);
                 if (obj != null)
                 {
-                    AddWindow((SubWindow) obj, false);
+                    m_SubWindowList.Add((SubWindow)obj);
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace EditorWinEx.Internal
         protected override void OnInit()
         {
             base.OnInit();
-            if (!UseLayout("Default"))
+            if (!UseLayout("Current"))
                 UseDefaultLayout();
         }
 
@@ -118,59 +118,69 @@ namespace EditorWinEx.Internal
             base.OnDestroy();
             RemoveAllDynamicWindow();
             SaveCurrentLayout();
+            DestroyAllWindow();
         }
 
-        /// <summary>
-        /// 添加子窗口
-        /// </summary>
-        /// <param name="window">子窗口</param>
-        /// <param name="active">是否处于激活状态</param>
-        public void AddWindow(SubWindow window, bool active)
+        protected override void OnDisable()
         {
+            base.OnDisable();
+            SerializeAllWindow();
+        }
+
+        public void AddDynamicWindow(string title, string icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
+        Delegate method)
+        {
+            if (method == null)
+                return;
+            string id = SubWindowMethodDrawer.GetMethodID(method.Method, method.Target);
+            if (ContainWindowID(id))
+                return;
+            SubWindow window = new SubWindow(title, icon, true, method.Method, method.Target, toolbar, helpbox);
+            window.isDynamic = true;
             m_SubWindowList.Add(window);
-            if (active)
-            {
-                window.isOpen = true;
-                this.InsertWindow(window);
-            }
+            window.Open();
+            this.InsertWindow(window);
+        }
+
+        public void AddDynamicWindow<T>(T drawer) where T : SubWindowCustomDrawer
+        {
+            if (drawer == null)
+                return;
+            string id = SubWindowObjectDrawer.GetDrawerID(drawer, true);
+            if (ContainWindowID(id))
+                return;
+            SubWindow window = new SubWindow(true, drawer);
+            window.isDynamic = true;
+            m_SubWindowList.Add(window);
+            window.Open();
+            this.InsertWindow(window);
+        }
+
+        public bool RemoveDynamicWindow(Delegate method)
+        {
+            string id = null;
+            if (method == null)
+                id = SubWindowMethodDrawer.GetMethodID(null, null);
             else
-            {
-                window.isOpen = false;
-            }
+                id = SubWindowMethodDrawer.GetMethodID(method.Method, method.Target);
+            return RemoveWindowByID(id);
         }
 
-        /// <summary>
-        /// 设置指定ID窗口激活状态
-        /// </summary>
-        /// <param name="windowId"></param>
-        /// <param name="active"></param>
-        public void SetSubWindowActive(MethodInfo method, System.Object target, bool active)
+        public bool RemoveDynamicWindow<T>(T drawer) where T : SubWindowCustomDrawer
         {
-            if (method == null || target == null) return;
-            string windowId = target.GetType().FullName + "." + method.Name;
-            SetSubWindowActive(windowId, active);
+            string id = null;
+            if (drawer == null)
+                id = SubWindowObjectDrawer.GetDrawerID(null, true);
+            else
+                id = SubWindowObjectDrawer.GetDrawerID(drawer, true);
+            return RemoveWindowByID(id);
         }
 
-        /// <summary>
-        /// 设置指定ID窗口激活状态
-        /// </summary>
-        /// <param name="windowId"></param>
-        /// <param name="active"></param>
-        public void SetSubWindowActive(string windowId, bool active)
+        private void SerializeAllWindow()
         {
-            var sw = m_SubWindowList.Find(x => x.GetIndentifier() == windowId);
-            if (sw != null)
+            foreach (var win in m_SubWindowList)
             {
-                if (active && !sw.isOpen)
-                {
-                    this.InsertWindow(sw);
-                    return;
-                }
-                if (!active && sw.isOpen)
-                {
-                    sw.Close();
-                    return;
-                }
+                win.SerializeSubWindow();
             }
         }
 
@@ -178,53 +188,76 @@ namespace EditorWinEx.Internal
         /// 根据ID移除窗口
         /// </summary>
         /// <param name="windowId">窗口ID</param>
-        public void RemoveWindowByID(string windowId)
+        private bool RemoveWindowByID(string windowId)
         {
+            if (string.IsNullOrEmpty(windowId))
+                return false;
             if (this.m_SubWindowList != null)
             {
-                for (int i = 0; i < m_SubWindowList.Count; i++)
+                var win = GetWindowByID(windowId);
+                if (win != null)
                 {
-                    if (this.m_SubWindowList[i].GetIndentifier() == windowId)
+                    if (win.IsOpen)
                     {
-                        var win = this.m_SubWindowList[i];
-                        if (win.isOpen)
+                        if (this.m_Root != null)
                         {
-                            if (this.m_Root != null)
-                            {
-                                this.m_Root.RemoveWindow(win);
-                                this.m_Root.ClearEmptyNode();
-                                this.m_Root.Recalculate(0, true);
-                            }
+                            this.m_Root.RemoveWindow(win);
+                            this.m_Root.ClearEmptyNode();
+                            this.m_Root.Recalculate(0, true);
                         }
-                        this.m_SubWindowList.RemoveAt(i);
-                        return;
                     }
+                    this.m_SubWindowList.Remove(win);
+                    return true;
                 }
             }
+            return false;
         }
 
         public void RemoveAllDynamicWindow()
         {
             if (this.m_SubWindowList != null)
             {
+                bool hasRemoved = false;
                 for (int i = 0; i < m_SubWindowList.Count; i++)
                 {
                     if (this.m_SubWindowList[i].isDynamic)
                     {
                         var win = this.m_SubWindowList[i];
-                        if (win.isOpen)
+                        if (win.IsOpen)
                         {
                             if (this.m_Root != null)
                             {
                                 this.m_Root.RemoveWindow(win);
-                                this.m_Root.ClearEmptyNode();
-                                this.m_Root.Recalculate(0, true);
+                                hasRemoved = true;
                             }
                         }
+                        win.Destroy();
                         this.m_SubWindowList.RemoveAt(i);
-                        return;
                     }
                 }
+                if (hasRemoved)
+                {
+                    if (this.m_Root != null)
+                    {
+                        this.m_Root.ClearEmptyNode();
+                        this.m_Root.Recalculate(0, true);
+                    }
+                }
+            }
+        }
+
+        private void DestroyAllWindow()
+        {
+            if (this.m_SubWindowList != null)
+            {
+                for (int i = 0; i < m_SubWindowList.Count; i++)
+                {
+                    if (m_SubWindowList[i] != null)
+                    {
+                        m_SubWindowList[i].Destroy();
+                    }
+                }
+                m_SubWindowList.Clear();
             }
         }
 
@@ -232,17 +265,22 @@ namespace EditorWinEx.Internal
         /// 是否包含指定ID的窗口
         /// </summary>
         /// <param name="windowId"></param>
-        public bool ContainWindowID(string windowId)
+        private bool ContainWindowID(string windowId)
+        {
+            var win = GetWindowByID(windowId);
+            if (win != null)
+                return true;
+            return false;
+        }
+
+        private SubWindow GetWindowByID(string windowId)
         {
             if (this.m_SubWindowList != null)
             {
-                for (int i = 0; i < m_SubWindowList.Count; i++)
-                {
-                    if (this.m_SubWindowList[i].GetIndentifier() == windowId)
-                        return true;
-                }
+                var win = m_SubWindowList.Find(w => w.GetIndentifier() == windowId);
+                return win;
             }
-            return false;
+            return null;
         }
 
         /// <summary>
@@ -269,7 +307,7 @@ namespace EditorWinEx.Internal
                     GenericMenu menu = new GenericMenu();
                     for (int i = 0; i < m_SubWindowList.Count; i++)
                     {
-                        menu.AddItem(new GUIContent(m_SubWindowList[i].Title), m_SubWindowList[i].isOpen,
+                        menu.AddItem(new GUIContent(m_SubWindowList[i].Title), m_SubWindowList[i].IsOpen,
                             OnSetSubWindowActive, m_SubWindowList[i]);
                     }
                     menu.DropDown(rect);
@@ -285,13 +323,17 @@ namespace EditorWinEx.Internal
         {
             if (GUI.Button(rect, "Layout", GUIStyleCache.GetStyle("ToolbarDropDown")))
             {
-                if (m_Layout != null && m_Layout.Layouts != null && m_Layout.Layouts.Count > 0)
+                if (m_Layout != null)
                 {
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Default"), false, this.UseDefaultLayout);
-                    for (int i = 0; i < m_Layout.Layouts.Count; i++)
+                    if (m_Layout.Layouts != null && m_Layout.Layouts.Count > 0)
                     {
-                        menu.AddItem(new GUIContent(m_Layout.Layouts[i]), false, this.OnUseLayout, m_Layout.Layouts[i]);
+                        for (int i = 0; i < m_Layout.Layouts.Count; i++)
+                        {
+                            menu.AddItem(new GUIContent(m_Layout.Layouts[i]), false, this.OnUseLayout,
+                                m_Layout.Layouts[i]);
+                        }
                     }
                     menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Save Layout..."), false, this.OnSaveLayout);
@@ -304,7 +346,7 @@ namespace EditorWinEx.Internal
 
         public void SaveCurrentLayout()
         {
-            SaveLayoutCfgs("Default");
+            SaveLayoutCfgs("Current");
         }
 
         /// <summary>
@@ -407,7 +449,7 @@ namespace EditorWinEx.Internal
             if (subwindow == null)
                 return;
             SubWindow window = (SubWindow) subwindow;
-            if (window.isOpen)
+            if (window.IsOpen)
             {
                 window.Close();
             }
@@ -433,7 +475,7 @@ namespace EditorWinEx.Internal
                 return false;
             for (int i = 0; i < m_SubWindowList.Count; i++)
             {
-                if (m_SubWindowList[i].isOpen)
+                if (m_SubWindowList[i].IsOpen)
                 {
                     m_SubWindowList[i].Close();
                 }
@@ -476,18 +518,21 @@ namespace EditorWinEx.Internal
         /// </summary>
         private void UseDefaultLayout()
         {
-            List<SubWindow> alreadyOpen = new List<SubWindow>();
-            for (int i = 0; i < m_SubWindowList.Count; i++)
+            if (!UseLayout("Default"))
             {
-                if (m_SubWindowList[i].DefaultOpen)
+                List<SubWindow> alreadyOpen = new List<SubWindow>();
+                for (int i = 0; i < m_SubWindowList.Count; i++)
                 {
-                    alreadyOpen.Add(m_SubWindowList[i]);
-                    m_SubWindowList[i].Close();
+                    if (m_SubWindowList[i].DefaultOpen)
+                    {
+                        alreadyOpen.Add(m_SubWindowList[i]);
+                        m_SubWindowList[i].Close();
+                    }
                 }
-            }
-            for (int i = 0; i < alreadyOpen.Count; i++)
-            {
-                this.InsertWindow(alreadyOpen[i]);
+                for (int i = 0; i < alreadyOpen.Count; i++)
+                {
+                    this.InsertWindow(alreadyOpen[i]);
+                }
             }
         }
 

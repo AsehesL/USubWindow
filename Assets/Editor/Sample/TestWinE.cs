@@ -1,25 +1,26 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System;
 
 /// <summary>
-/// SubWindow基本范例
+/// SubWindow自定义SubWindow对象范例
 /// </summary>
 public class TestWinE : MDIEditorWindow {
 
-    [MenuItem("Test/TestWinE")]
-    static void Init()
+    [MenuItem("SubWindow范例/5.自定义SubWindow对象范例")]
+    static void InitWin()
     {
-        TestWinE win = TestWinA.CreateWindow<TestWinE>();
+        TestWinA.CreateWindow<TestWinE>();
     }
 
-    [SubWindow("SunWinA", SubWindowIcon.Game)]
+    [EWSubWindow("SunWinA", EWSubWindowIcon.Game)]
     private void SubWinA(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinA");
     }
 
-    [SubWindow("SunWinB", SubWindowIcon.Project)]
+    [EWSubWindow("SunWinB", EWSubWindowIcon.Project)]
     private void SubWinB(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "SubWinB");
@@ -31,27 +32,37 @@ public class TestWinE : MDIEditorWindow {
     }
 }
 
-[SubWindowHandle(typeof(TestWinE))]
-class TestDrawerA : SubWindowCustomObjectDrawer
+[EWSubWindowHandle(typeof(TestWinE))]
+[System.Serializable]
+class TestDrawerForTestWinE : SubWindowCustomDrawer
 {
 
     public override GUIContent Title
     {
-        get { return m_Title; }
+        get
+        {
+            if (m_Title == null)
+                m_Title = new GUIContent("DefaultTitle");
+            return m_Title;
+        }
     }
 
-    public override SubWindowToolbarType toolBar
+    public override EWSubWindowToolbarType toolBar
     {
         get { return m_ToolBar; }
     }
 
-    private SubWindowToolbarType m_ToolBar = SubWindowToolbarType.None;
+    private EWSubWindowToolbarType m_ToolBar = EWSubWindowToolbarType.None;
 
+    [NonSerialized]
     private GUIContent m_Title;
 
-    public TestDrawerA()
+    public string valueA = "xxx";
+
+    public Vector3 valueB = Vector3.zero;
+
+    public TestDrawerForTestWinE()
     {
-        m_Title = new GUIContent("DefaultTitle");
     }
 
     public override void DrawMainWindow(Rect mainRect)
@@ -63,11 +74,11 @@ class TestDrawerA : SubWindowCustomObjectDrawer
         }
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 20, mainRect.width, 20), "显示Toolbar"))
         {
-            m_ToolBar = SubWindowToolbarType.Normal;
+            m_ToolBar = EWSubWindowToolbarType.Normal;
         }
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 40, mainRect.width, 20), "关闭Toolbar"))
         {
-            m_ToolBar = SubWindowToolbarType.None;
+            m_ToolBar = EWSubWindowToolbarType.None;
         }
         if (GUI.Button(new Rect(mainRect.x, mainRect.y + 60, mainRect.width, 20), "显示HelpBox"))
         {
@@ -81,5 +92,79 @@ class TestDrawerA : SubWindowCustomObjectDrawer
         {
             ((TestWinE) container).TestFunc();
         }
+        valueA = EditorGUI.TextField(new Rect(mainRect.x, mainRect.y + 120, mainRect.width, 20), "Value:", valueA);
+        valueB = EditorGUI.Vector3Field(new Rect(mainRect.x, mainRect.y + 140, mainRect.width, 20), "ValueB:", valueB);
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        Debug.Log("Init");
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Debug.Log("Destroy");
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        Debug.Log("Disbale");
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        Debug.Log("Enalbe");
+    }
+   
+}
+
+[EWSubWindowHandle(typeof(TestWinE))]
+[System.Serializable]
+class TestDrawerForTestWinE2 : SubWindowCustomDrawer, ISubWinCustomMenu, ISubWinLock
+{
+    public override GUIContent Title
+    {
+        get
+        {
+            if (m_Title == null)
+                m_Title = new GUIContent("DefaultTitle2");
+            return m_Title;
+        }
+    }
+
+    public override EWSubWindowToolbarType toolBar
+    {
+        get { return EWSubWindowToolbarType.None; }
+    }
+
+    [NonSerialized]
+    private GUIContent m_Title;
+
+    public TestDrawerForTestWinE2()
+    {
+    }
+
+    public void SetLockActive(bool isLockActive)
+    {
+        if (isLockActive)
+            Debug.Log("窗口上锁");
+        else
+            Debug.Log("窗口解锁");
+    }
+
+    public void AddCustomMenu(GenericMenu menu)
+    {
+        menu.AddItem(new GUIContent("Test1"), false, ClickMenu);
+        menu.AddItem(new GUIContent("Test2"), false, ClickMenu);
+        menu.AddItem(new GUIContent("Test3"), false, ClickMenu);
+    }
+
+    private void ClickMenu()
+    {
+        Debug.Log("按下了菜单");
     }
 }

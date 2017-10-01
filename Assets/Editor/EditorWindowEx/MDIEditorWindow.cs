@@ -4,7 +4,9 @@ using UnityEditor;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using EditorWinEx;
 using EditorWinEx.Internal;
+using EditorWinEx.Internal.Serialization;
 
 public delegate void SubWindowAction(Rect rect);
 
@@ -15,12 +17,21 @@ public delegate void SubWindowActionFull(Rect rect, Rect toolBar, Rect helpBox);
 /// <summary>
 /// MDIEditorWindow-可单独传入Handle打开，也可扩展该类
 /// </summary>
-public class MDIEditorWindow : EditorWindow
+public class MDIEditorWindow : EditorWindow, IMessageDispatcher
 {
     /// <summary>
     /// 进行绘制的handle对象（可以是任何能通过构造函数构造的类型）
     /// </summary>
-    protected System.Object handle;
+    protected System.Object Handle
+    {
+        get
+        {
+            if (m_Handle == null)
+                return null;
+            return m_Handle.Obj;
+        }
+    }
+
     /// <summary>
     /// 窗口树
     /// </summary>
@@ -36,6 +47,9 @@ public class MDIEditorWindow : EditorWindow
 
     private bool m_IsInitialized;
 
+    [SerializeField]
+    private EWSerializationObject m_Handle;
+
     /// <summary>
     /// 窗口创建方法
     /// </summary>
@@ -45,7 +59,10 @@ public class MDIEditorWindow : EditorWindow
     public static T CreateWindow<T>(System.Object handle = null) where T : MDIEditorWindow
     {
         T window = MDIEditorWindow.GetWindow<T>();
-        window.handle = handle;
+        if (handle != null)
+            window.m_Handle = EWSerializationObject.CreateInstance(handle);
+        else
+            window.m_Handle = null;
         window.Clear();
         window.Init();
         window.m_IsInitialized = true;
@@ -104,54 +121,6 @@ public class MDIEditorWindow : EditorWindow
     }
 
     /// <summary>
-    /// 打开SubWindow
-    /// </summary>
-    /// <param name="id"></param>
-    public void OpenSubWindow(string id)
-    {
-        SetSubWindowActive(id, true);
-    }
-
-    public void OpenSubWindow(SubWindowAction action)
-    {
-        SetSubWindowActive(action, true);
-    }
-
-    public void OpenSubWindow(SubWindowActionHalf action)
-    {
-        SetSubWindowActive(action, true);
-    }
-
-    public void OpenSubWindow(SubWindowActionFull action)
-    {
-        SetSubWindowActive(action, true);
-    }
-
-    /// <summary>
-    /// 关闭SubWindow
-    /// </summary>
-    /// <param name="id"></param>
-    public void CloseSubWindow(string id)
-    {
-        SetSubWindowActive(id, false);
-    }
-
-    public void CloseSubWindow(SubWindowAction action)
-    {
-        SetSubWindowActive(action, false);
-    }
-
-    public void CloseSubWindow(SubWindowActionHalf action)
-    {
-        SetSubWindowActive(action, false);
-    }
-
-    public void CloseSubWindow(SubWindowActionFull action)
-    {
-        SetSubWindowActive(action, false);
-    }
-
-    /// <summary>
     /// 动态添加子窗体
     /// </summary>
     /// <param name="title">标题</param>
@@ -159,7 +128,7 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="action">方法</param>
     public void AddDynamicSubWindow(string title, string icon, SubWindowAction action)
     {
-        this.AddDynamicSubWindowInternal(title, icon, SubWindowToolbarType.None, SubWindowHelpBoxType.None, action);
+        this.AddDynamicSubWindowInternal(title, icon, EWSubWindowToolbarType.None, SubWindowHelpBoxType.None, action);
     }
 
     /// <summary>
@@ -168,9 +137,9 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="title">标题</param>
     /// <param name="icon">图标</param>
     /// <param name="action">方法</param>
-    public void AddDynamicSubWindow(string title, SubWindowIcon icon, SubWindowAction action)
+    public void AddDynamicSubWindow(string title, EWSubWindowIcon icon, SubWindowAction action)
     {
-        this.AddDynamicSubWindowInternal(title, icon, SubWindowToolbarType.None, SubWindowHelpBoxType.None, action);
+        this.AddDynamicSubWindowInternal(title, icon, EWSubWindowToolbarType.None, SubWindowHelpBoxType.None, action);
     }
 
     /// <summary>
@@ -179,9 +148,9 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="title">标题</param>
     /// <param name="icon">图标</param>
     /// <param name="action">方法</param>
-    public void AddDynamicSubWindowWithToolBar(string title, string icon, SubWindowToolbarType toolbar, SubWindowActionHalf action)
+    public void AddDynamicSubWindowWithToolBar(string title, string icon, EWSubWindowToolbarType toolbar, SubWindowActionHalf action)
     {
-        if (toolbar == SubWindowToolbarType.None)
+        if (toolbar == EWSubWindowToolbarType.None)
             return;
         this.AddDynamicSubWindowInternal(title, icon, toolbar, SubWindowHelpBoxType.None, action);
     }
@@ -192,9 +161,9 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="title">标题</param>
     /// <param name="icon">图标</param>
     /// <param name="action">方法</param>
-    public void AddDynamicSubWindowWithToolBar(string title, SubWindowIcon icon, SubWindowToolbarType toolbar, SubWindowActionHalf action)
+    public void AddDynamicSubWindowWithToolBar(string title, EWSubWindowIcon icon, EWSubWindowToolbarType toolbar, SubWindowActionHalf action)
     {
-        if (toolbar == SubWindowToolbarType.None)
+        if (toolbar == EWSubWindowToolbarType.None)
             return;
         this.AddDynamicSubWindowInternal(title, icon, toolbar, SubWindowHelpBoxType.None, action);
     }
@@ -211,7 +180,7 @@ public class MDIEditorWindow : EditorWindow
     {
         if (helpBoxType == SubWindowHelpBoxType.None)
             return;
-        this.AddDynamicSubWindowInternal(title, icon, SubWindowToolbarType.None, helpBoxType, action);
+        this.AddDynamicSubWindowInternal(title, icon, EWSubWindowToolbarType.None, helpBoxType, action);
     }
 
     /// <summary>
@@ -221,12 +190,12 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="icon">图标</param>
     /// <param name="helpBoxType">帮助栏</param>
     /// <param name="action">方法</param>
-    public void AddDynamicSubWindowWithHelpBox(string title, SubWindowIcon icon, SubWindowHelpBoxType helpBoxType,
+    public void AddDynamicSubWindowWithHelpBox(string title, EWSubWindowIcon icon, SubWindowHelpBoxType helpBoxType,
         SubWindowActionHalf action)
     {
         if (helpBoxType == SubWindowHelpBoxType.None)
             return;
-        this.AddDynamicSubWindowInternal(title, icon, SubWindowToolbarType.None, helpBoxType, action);
+        this.AddDynamicSubWindowInternal(title, icon, EWSubWindowToolbarType.None, helpBoxType, action);
     }
 
     /// <summary>
@@ -236,12 +205,12 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="icon">图标</param>
     /// <param name="helpBoxType">帮助栏</param>
     /// <param name="action">方法</param>
-    public void AddDynamicFullSubWindow(string title, string icon, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpBoxType,
+    public void AddDynamicFullSubWindow(string title, string icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpBoxType,
         SubWindowActionFull action)
     {
         if (helpBoxType == SubWindowHelpBoxType.None)
             return;
-        if (toolbar == SubWindowToolbarType.None)
+        if (toolbar == EWSubWindowToolbarType.None)
             return;
         this.AddDynamicSubWindowInternal(title, icon, toolbar, helpBoxType, action);
     }
@@ -253,14 +222,28 @@ public class MDIEditorWindow : EditorWindow
     /// <param name="icon">图标</param>
     /// <param name="helpBoxType">帮助栏</param>
     /// <param name="action">方法</param>
-    public void AddDynamicFullSubWindow(string title, SubWindowIcon icon, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpBoxType,
+    public void AddDynamicFullSubWindow(string title, EWSubWindowIcon icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpBoxType,
         SubWindowActionFull action)
     {
         if (helpBoxType == SubWindowHelpBoxType.None)
             return;
-        if (toolbar == SubWindowToolbarType.None)
+        if (toolbar == EWSubWindowToolbarType.None)
             return;
         this.AddDynamicSubWindowInternal(title, icon, toolbar, helpBoxType, action);
+    }
+
+    /// <summary>
+    /// 添加动态窗口
+    /// </summary>
+    /// <param name="drawer"></param>
+    public void AddDynamicSubWindow<T>(T drawer) where T : SubWindowCustomDrawer
+    {
+        if (drawer == null)
+            return;
+        if (m_WindowTree != null)
+        {
+            this.m_WindowTree.AddDynamicWindow(drawer);
+        }
     }
 
     /// <summary>
@@ -290,6 +273,15 @@ public class MDIEditorWindow : EditorWindow
         this.RemoveDynamicSubWindowInternal(action);
     }
 
+    public bool RemoveDynamicSubWindow<T>(T drawer)where T : SubWindowCustomDrawer
+    {
+        if (drawer == null)
+            return false;
+        if (m_WindowTree != null)
+            return m_WindowTree.RemoveDynamicWindow(drawer);
+        return false;
+    }
+
     /// <summary>
     /// 移除所有动态窗口
     /// </summary>
@@ -314,6 +306,19 @@ public class MDIEditorWindow : EditorWindow
 
     protected virtual void OnDisable()
     {
+        if (m_WindowTree != null)
+        {
+            m_WindowTree.Disable();
+        }
+        if (m_ToolbarTree != null)
+        {
+            m_ToolbarTree.Disable();
+        }
+        if (m_MsgBox != null)
+        {
+            m_MsgBox.Disable();
+        }
+        SaveHandle();
     }
 
     protected virtual void OnDestroy()
@@ -333,6 +338,7 @@ public class MDIEditorWindow : EditorWindow
             m_MsgBox.Destroy();
             m_MsgBox = null;
         }
+        ClearHandle();
     }
 
     protected virtual void Clear()
@@ -356,10 +362,11 @@ public class MDIEditorWindow : EditorWindow
 
     protected virtual void Init()
     {
+        LoadHandle();
         if (m_WindowTree == null)
         {
-            if (handle != null)
-                m_WindowTree = new SubWindowTree(Repaint, GetType().Name, handle.GetType().Name);
+            if (Handle != null)
+                m_WindowTree = new SubWindowTree(Repaint, GetType().Name, Handle.GetType().Name);
             else
                 m_WindowTree = new SubWindowTree(Repaint, GetType().Name, null);
         }
@@ -373,17 +380,17 @@ public class MDIEditorWindow : EditorWindow
         }
         Type[] handleTypes = null;
         System.Object[] handles = null;
-        if (handle != null)
+        if (Handle != null)
         {
-            handleTypes = new Type[] {handle.GetType(), GetType()};
-            handles = new object[] {handle, this};
+            handleTypes = new Type[] {Handle.GetType(), GetType()};
+            handles = new object[] {Handle, this};
         }
         else
         {
             handleTypes = new Type[] {GetType()};
             handles = new object[] {this};
         }
-        EditorWindowToolsInitializer.InitTools(this, handleTypes, handles, m_WindowTree, m_ToolbarTree, m_MsgBox);
+        EditorWindowComponentsInitializer.InitComponents(this, handleTypes, handles, m_WindowTree, m_ToolbarTree, m_MsgBox);
     }
 
     protected virtual void OnDrawGUI()
@@ -446,49 +453,56 @@ public class MDIEditorWindow : EditorWindow
 
     }
 
-    private void SetSubWindowActive(string windowId, bool active)
-    {
-        if (m_WindowTree != null && !string.IsNullOrEmpty(windowId))
-        {
-            m_WindowTree.SetSubWindowActive(windowId, active);
-        }
-    }
-
-    private void SetSubWindowActive(Delegate action, bool active)
-    {
-        if (m_WindowTree != null && action != null)
-        {
-            m_WindowTree.SetSubWindowActive(action.Method, action.Target, active);
-        }
-    }
-
-    private void AddDynamicSubWindowInternal(string title, SubWindowIcon icon, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
+    private void AddDynamicSubWindowInternal(string title, EWSubWindowIcon icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
         Delegate action)
     {
         this.AddDynamicSubWindowInternal(title, GUIEx.GetIconPath(icon), toolbar, helpbox, action);
     }
 
-    private void AddDynamicSubWindowInternal(string title, string icon, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
+    private void AddDynamicSubWindowInternal(string title, string icon, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox,
         Delegate action)
     {
         if (m_WindowTree != null)
         {
-            string id = action.Target.GetType().FullName + "." + action.Method.Name;
-            if (m_WindowTree.ContainWindowID(id))
-                return;
-            SubWindow window = new SubWindow(title, icon, true, action.Method, action.Target, toolbar, helpbox);
-            window.isDynamic = true;
-            this.m_WindowTree.AddWindow(window, true);
+            this.m_WindowTree.AddDynamicWindow(title, icon, toolbar, helpbox, action);
         }
     }
 
-    private void RemoveDynamicSubWindowInternal(Delegate action)
+    private bool RemoveDynamicSubWindowInternal(Delegate action)
     {
         if (m_WindowTree != null)
         {
-            string id = action.Target.GetType().FullName + "." + action.Method.Name;
-            this.m_WindowTree.RemoveWindowByID(id);
+            return m_WindowTree.RemoveDynamicWindow(action);
         }
+        return false;
     }
 
+    public Type GetContainerType()
+    {
+        return GetType();
+    }
+
+    private void SaveHandle()
+    {
+        if (this.m_Handle == null)
+            return;
+        string id = GetType().FullName;
+        this.m_Handle.SaveObject(id);
+    }
+
+    private void LoadHandle()
+    {
+        if (this.m_Handle == null)
+            return;
+        string id = GetType().FullName;
+        this.m_Handle.LoadObject(id);
+    }
+
+    private void ClearHandle()
+    {
+        if (this.m_Handle == null)
+            return;
+        string id = GetType().FullName;
+        this.m_Handle.ClearObject(id);
+    }
 }

@@ -2,13 +2,23 @@
 using System.Collections;
 using System;
 
-public abstract class SubWindowCustomObjectDrawer : CustomObjectDrawerBase
+/// <summary>
+/// SubWindow自定义绘制器
+/// </summary>
+[System.Serializable]
+public abstract class SubWindowCustomDrawer : CustomEWComponentDrawerBase
 {
 
     public SubWindowHelpBox helpBox
     {
         get { return m_HelpBox; }
     }
+
+    [NonSerialized]
+    private SubWindowHelpBox m_HelpBox;
+
+    [NonSerialized]
+    private SubWindowHelpBoxType m_HelpBoxType;
 
     public void SetSubWindowHelpBoxType(SubWindowHelpBoxType helpBoxType)
     {
@@ -22,21 +32,25 @@ public abstract class SubWindowCustomObjectDrawer : CustomObjectDrawerBase
     {
     }
 
-    public override void Destroy()
+    public override void OnEnable()
+    {
+    }
+
+    public override void OnDisable()
+    {
+    }
+
+    public override void OnDestroy()
     {
     }
 
     public abstract GUIContent Title { get; }
 
-    public abstract SubWindowToolbarType toolBar { get; }
+    public abstract EWSubWindowToolbarType toolBar { get; }
 
     public virtual void DrawMainWindow(Rect mainRect) { }
 
     public virtual void DrawToolBar(Rect toolbar) { }
 
     public virtual void DrawHelpBox(Rect helpBox) { }
-
-    private SubWindowHelpBox m_HelpBox;
-
-    private SubWindowHelpBoxType m_HelpBoxType;
 }

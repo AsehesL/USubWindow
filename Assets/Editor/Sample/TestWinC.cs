@@ -3,23 +3,23 @@ using UnityEditor;
 using System.Collections;
 
 /// <summary>
-/// SubWindow基本范例
+/// SubWindow工具栏和帮助栏范例
 /// </summary>
 public class TestWinC : MDIEditorWindow {
 
-    [MenuItem("Test/TestWinC")]
-    static void Init()
+    [MenuItem("SubWindow范例/3.工具栏和帮助栏范例")]
+    static void InitWin()
     {
-        TestWinC win = TestWinA.CreateWindow<TestWinC>();
+        TestWinA.CreateWindow<TestWinC>();
     }
 
-    [SubWindow("SunWinA", SubWindowIcon.None)]
+    [EWSubWindow("SunWinA", EWSubWindowIcon.None)]
     private void SubWinA(Rect main)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "普通SubWindow");
     }
 
-    [SubWindow("SunWinB", SubWindowIcon.None, true, SubWindowStyle.Default, SubWindowToolbarType.Normal)]
+    [EWSubWindow("SunWinB", EWSubWindowIcon.None, true, SubWindowStyle.Default, EWSubWindowToolbarType.Normal)]
     private void SubWinB(Rect main, Rect toolbar)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "这是一个有Toolbar的SubWindow");
@@ -27,14 +27,14 @@ public class TestWinC : MDIEditorWindow {
         if(GUIEx.ToolbarButton(new Rect(toolbar.x,toolbar.y, 100, toolbar.height), "btn")) { }
     }
 
-    [SubWindow("SunWinC", SubWindowIcon.None, true, SubWindowStyle.Default, SubWindowToolbarType.None, SubWindowHelpBoxType.Locker)]
+    [EWSubWindow("SunWinC", EWSubWindowIcon.None, true, SubWindowStyle.Default, EWSubWindowToolbarType.None, SubWindowHelpBoxType.Locker)]
     private void SubWinC(Rect main, Rect helpBox)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "这是一个有HelpBox的SubWindow");
         GUI.Label(new Rect(helpBox.x, helpBox.y+10, helpBox.width, 20), "HelpBox");
     }
 
-    [SubWindow("SunWinD", SubWindowIcon.None, true, SubWindowStyle.Default, SubWindowToolbarType.Normal, SubWindowHelpBoxType.Bottom)]
+    [EWSubWindow("SunWinD", EWSubWindowIcon.None, true, SubWindowStyle.Default, EWSubWindowToolbarType.Normal, SubWindowHelpBoxType.Bottom)]
     private void SubWinD(Rect main, Rect toolbar, Rect helpBox)
     {
         GUI.Label(new Rect(main.x, main.y, main.width, 20), "这是一个即有Toolbar又有HelpBox的SubWindow");

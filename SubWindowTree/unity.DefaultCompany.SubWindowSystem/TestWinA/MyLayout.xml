@@ -1,0 +1,20 @@
+<SubWindowTree Layout="MyLayout" TreeID="599889985">
+  <SubWindowNode Weight="1" Depth="0" Horizontal="True" Index="0">
+    <SubWindowNode Weight="0.3111111" Depth="1" Horizontal="False" Index="0">
+      <SubWindowLeaf Weight="1" Depth="2" Horizontal="True" Index="0">
+        <SubWindow ID="__METHOD__TestWinA.SubWinB" Index="0" />
+      </SubWindowLeaf>
+    </SubWindowNode>
+    <SubWindowLeaf Weight="0.2777778" Depth="1" Horizontal="False" Index="1">
+      <SubWindow ID="__METHOD__TestWinA.SubWinD" Index="0" />
+    </SubWindowLeaf>
+    <SubWindowNode Weight="0.4111111" Depth="1" Horizontal="False" Index="2">
+      <SubWindowLeaf Weight="0.5" Depth="2" Horizontal="True" Index="0">
+        <SubWindow ID="__METHOD__TestWinA.SubWinA" Index="0" />
+      </SubWindowLeaf>
+      <SubWindowLeaf Weight="0.5" Depth="2" Horizontal="True" Index="1">
+        <SubWindow ID="__METHOD__TestWinA.SubWinC" Index="0" />
+      </SubWindowLeaf>
+    </SubWindowNode>
+  </SubWindowNode>
+</SubWindowTree>

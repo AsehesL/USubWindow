@@ -22,7 +22,7 @@ public class GridSubWindow : SubWindow
     private int m_TileCountX = 0;
     private int m_TileCountY = 0;
 
-    public GridSubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target, SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox) : base(title, icon, defaultOpen, method, target, toolbar, helpbox)
+    public GridSubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target, EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox) : base(title, icon, defaultOpen, method, target, toolbar, helpbox)
     {
     }
 
@@ -105,9 +105,9 @@ public class GridSubWindow : SubWindow
             m_SceneViewPosition.x = rect.width - tileCountX * 2 * kTileSize;
         if (m_SceneViewPosition.x > tileCountX * kTileSize)
             m_SceneViewPosition.x = tileCountX * kTileSize;
-        if (m_SceneViewPosition.y < rect.height - tileCountY * 2 * kTileSize - 20)
-            m_SceneViewPosition.y = rect.height - tileCountY * 2 * kTileSize - 20;
-        if (m_SceneViewPosition.y > tileCountY * kTileSize - 20)
-            m_SceneViewPosition.y = tileCountY * kTileSize - 20;
+        if (m_SceneViewPosition.y < rect.height - tileCountY * 2 * kTileSize)
+            m_SceneViewPosition.y = rect.height - tileCountY * 2 * kTileSize;
+        if (m_SceneViewPosition.y > tileCountY * kTileSize)
+            m_SceneViewPosition.y = tileCountY * kTileSize;
     }
 }

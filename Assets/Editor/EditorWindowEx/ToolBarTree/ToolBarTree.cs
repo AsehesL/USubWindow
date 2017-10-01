@@ -9,7 +9,7 @@ using EditorWinEx.Internal;
 /// <summary>
 /// 工具栏树
 /// </summary>
-public class ToolBarTree : EditorWindowTool
+public class ToolBarTree : EditorWindowComponentBase
 {
     /// <summary>
     /// 选项数量
@@ -54,6 +54,14 @@ public class ToolBarTree : EditorWindowTool
         m_Root.InsertNode(text, method, target, null, null, priority);
     }
 
+    /// <summary>
+    /// 插入菜单项
+    /// </summary>
+    /// <param name="text">菜单项</param>
+    /// <param name="method">菜单响应方法</param>
+    /// <param name="priority">优先级</param>
+    /// <param name="condition">条件委托</param>
+    /// <param name="obj"></param>
     public void InsertItem(string text, Delegate method, int priority, ConditionDelegate condition, System.Object obj)
     {
         if (method == null)
@@ -92,13 +100,13 @@ public class ToolBarTree : EditorWindowTool
 
     protected override void OnRegisterMethod(System.Object container, MethodInfo method, System.Object target)
     {
-        System.Object[] atts = method.GetCustomAttributes(typeof(ToolBarAttribute), false);
+        System.Object[] atts = method.GetCustomAttributes(typeof(EWToolBarAttribute), false);
         ParameterInfo[] parameters = method.GetParameters();
         if (atts != null && parameters.Length == 0)
         {
             for (int j = 0; j < atts.Length; j++)
             {
-                ToolBarAttribute att = (ToolBarAttribute)atts[j];
+                EWToolBarAttribute att = (EWToolBarAttribute)atts[j];
                 InsertItem(att.menuItem, method, target, att.priority);
             }
         }

@@ -81,7 +81,7 @@ namespace EditorWinEx.Internal
         public virtual void DrawGUI(Rect rect, System.Action repaintAction)
         {
             float offset = 0;
-            Rect resizeRect = default(Rect);
+            //Rect resizeRect = default(Rect);
             if (isHorizontal)
             {
                 for (int i = 0; i < m_Childs.Count; i++)
@@ -90,10 +90,11 @@ namespace EditorWinEx.Internal
                     {
                         Resize(i - 1, i, new Rect(rect.x + offset - 2, rect.y, 4, rect.height));
                     }
-                    m_Childs[i].DrawGUI(new Rect(rect.x + offset, rect.y, rect.width*m_Childs[i].weight, rect.height),
+                    int w = (int) (rect.width*m_Childs[i].weight);
+                    m_Childs[i].DrawGUI(new Rect(rect.x + offset, rect.y, w, rect.height),
                         repaintAction);
                     if (i >= 0 && i < m_Childs.Count)
-                        offset += rect.width*m_Childs[i].weight;
+                        offset += w;
                 }
             }
             else
@@ -104,10 +105,11 @@ namespace EditorWinEx.Internal
                     {
                         Resize(i - 1, i, new Rect(rect.x, rect.y + offset - 2, rect.width, 4));
                     }
-                    m_Childs[i].DrawGUI(new Rect(rect.x, rect.y + offset, rect.width, rect.height*m_Childs[i].weight),
+                    int h = (int) (rect.height*m_Childs[i].weight);
+                    m_Childs[i].DrawGUI(new Rect(rect.x, rect.y + offset, rect.width, h),
                         repaintAction);
                     if (i >= 0 && i < m_Childs.Count)
-                        offset += rect.height*m_Childs[i].weight;
+                        offset += h;
                 }
             }
             DoResize(repaintAction);

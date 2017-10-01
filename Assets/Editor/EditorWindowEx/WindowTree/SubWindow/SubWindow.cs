@@ -13,6 +13,7 @@ using EditorWinEx.Internal;
 [SubWindowStyle(SubWindowStyle.Default)]
 public class SubWindow
 {
+
     /// <summary>
     /// 标题
     /// </summary>
@@ -26,7 +27,7 @@ public class SubWindow
     /// </summary>
     public bool DefaultOpen { get; private set; }
 
-    public bool isOpen;
+    public bool IsOpen { get; private set; }
 
     public bool isDynamic;
 
@@ -38,16 +39,18 @@ public class SubWindow
     private SubWindowDrawerBase m_Drawer;
 
     public SubWindow(string title, string icon, bool defaultOpen, MethodInfo method, System.Object target,
-        SubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
+        EWSubWindowToolbarType toolbar, SubWindowHelpBoxType helpbox)
     {
         this.DefaultOpen = defaultOpen;
         this.m_Drawer = new SubWindowMethodDrawer(title, icon, method, target, toolbar, helpbox);
+        this.m_Drawer.Init();
     }
 
-    public SubWindow(bool defaultOpen, SubWindowCustomObjectDrawer drawer)
+    public SubWindow(bool defaultOpen, SubWindowCustomDrawer drawer)
     {
         this.DefaultOpen = defaultOpen;
         this.m_Drawer = new SubWindowObjectDrawer(drawer);
+        this.m_Drawer.Init();
     }
 
     /// <summary>
@@ -57,7 +60,7 @@ public class SubWindow
     public string GetIndentifier()
     {
         if (m_Drawer != null)
-            return m_Drawer.Id;
+            return m_Drawer.GetID(isDynamic);
         return "Unknown.UnknownId";
     }
 
@@ -83,17 +86,50 @@ public class SubWindow
     }
 
     /// <summary>
+    /// 绘制工具栏区域
+    /// </summary>
+    /// <param name="rect"></param>
+    public void DrawToolBarExt(Rect rect)
+    {
+        if (GUI.Button(new Rect(rect.x + rect.width - 21, rect.y + 4, 13, 13), string.Empty, GUIStyleCache.GetStyle("WinBtnClose")))
+        {
+            Close();
+        }
+        m_Drawer.DrawLeafToolBar(new Rect(rect.x, rect.y, rect.width - 27, rect.height));
+    }
+
+    /// <summary>
     /// 关闭窗口
     /// </summary>
     public void Close()
     {
-        if (!isOpen)
+        if (!IsOpen)
             return;
-        isOpen = false;
+        IsOpen = false;
         if (m_OnClose != null)
         {
             m_OnClose(this);
         }
+        m_Drawer.Disable();
+    }
+
+    public void Open()
+    {
+        if (IsOpen)
+            return;
+        IsOpen = true;
+        m_Drawer.Enable();
+    }
+
+    public void Destroy()
+    {
+        IsOpen = false;
+        m_Drawer.Destroy();
+    }
+
+    public void SerializeSubWindow()
+    {
+        m_Drawer.Serialize(isDynamic);
     }
 
     protected virtual Rect DrawMainArea(Rect rect)
