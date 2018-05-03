@@ -81,7 +81,7 @@ namespace EditorWinEx.Internal
         {
             if (string.IsNullOrEmpty(key))
                 key = "Default";
-            return Application.identifier + ".EditorPrefsEx." + key;
+            return MDIEditorWindow.GetIndentifier() + ".EditorPrefsEx." + key;
         }
     }
 }

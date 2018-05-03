@@ -2,7 +2,6 @@
 using UnityEditor;
 using System.Collections;
 using System;
-using UnityEngine.AI;
 
 /// <summary>
 /// SubWindow动态窗口范例

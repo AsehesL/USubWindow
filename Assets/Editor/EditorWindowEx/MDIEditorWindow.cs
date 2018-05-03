@@ -282,6 +282,15 @@ public class MDIEditorWindow : EditorWindow, IMessageDispatcher
         return false;
     }
 
+    public static string GetIndentifier()
+    {
+#if UNITY_5_6
+            return Application.identifier;
+#else
+        return Application.bundleIdentifier;
+#endif
+    }
+
     /// <summary>
     /// 移除所有动态窗口
     /// </summary>
