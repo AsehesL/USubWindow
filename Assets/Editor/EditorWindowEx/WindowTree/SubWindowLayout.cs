@@ -20,7 +20,7 @@ namespace EditorWinEx.Internal
         private string m_WindowName;
         private string m_HandleName;
 
-        private string m_LayoutPrefsKey;
+        //private string m_LayoutPrefsKey;
 
         private List<string> m_Layouts = new List<string>();
 
@@ -29,10 +29,10 @@ namespace EditorWinEx.Internal
             this.m_WindowName = windowName;
             this.m_HandleName = handleName;
 
-            m_LayoutPrefsKey = MDIEditorWindow.GetIndentifier() + "_" + "SubWindowTree_" + m_WindowName;
+            //m_LayoutPrefsKey = MDIEditorWindow.GetIndentifier() + "_" + "SubWindowTree_" + m_WindowName;
 
-            if (!string.IsNullOrEmpty(m_HandleName))
-                m_LayoutPrefsKey = m_LayoutPrefsKey + "_" + m_HandleName;
+            //if (!string.IsNullOrEmpty(m_HandleName))
+            //    m_LayoutPrefsKey = m_LayoutPrefsKey + "_" + m_HandleName;
             LoadLayoutCfgs();
         }
 
@@ -167,7 +167,7 @@ namespace EditorWinEx.Internal
 
         private string GetLayoutCfgsPath(bool isCurrent)
         {
-            string rootPath = "SubWindowTree/" + MDIEditorWindow.GetIndentifier() + "/" + m_WindowName;
+            string rootPath = "SubWindowTree/" + m_WindowName;
             if (!string.IsNullOrEmpty(m_HandleName))
                 rootPath = rootPath + "/" + m_HandleName;
             if (isCurrent)
